@@ -66,9 +66,9 @@ affinity: {}
 postgresql:
   enabled: true
   auth:
-    username: postiz
-    password: postiz-password
-    database: postiz
+    username: postqueen
+    password: postqueen-password
+    database: postqueen
   service:
     ports:
       postgresql: 5432
@@ -77,7 +77,7 @@ postgresql:
 redis:
   enabled: true
   auth:
-    password: postiz-redis-password
+    password: postqueen-redis-password
   master:
     service:
       ports:

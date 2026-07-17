@@ -2,9 +2,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "postiz.fullname" . }}
+  name: {{ include "postqueen.fullname" . }}
   labels:
-    {{- include "postiz.labels" . | nindent 4 }}
+    {{- include "postqueen.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -33,7 +33,7 @@ spec:
             pathType: {{ .pathType }}
             backend:
               service:
-                name: {{ include "postiz.fullname" $ }}
+                name: {{ include "postqueen.fullname" $ }}
                 port: 
                   number: {{ .port }}
           {{- end }}

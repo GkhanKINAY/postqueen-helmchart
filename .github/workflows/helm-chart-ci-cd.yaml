@@ -16,8 +16,8 @@ on:
   workflow_dispatch:
 
 env:
-  CHART_NAME: postiz
-  CHART_PATH: ./charts/postiz
+  CHART_NAME: postqueen
+  CHART_PATH: ./charts/postqueen
 
 jobs:
   lint-test:

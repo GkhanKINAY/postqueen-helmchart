@@ -1,6 +1,6 @@
-# Postiz Helm Chart
+# PostQueen Helm Chart
 
-This Helm chart deploys the Postiz application on a Kubernetes cluster using the Helm package manager.
+This Helm chart deploys the PostQueen application on a Kubernetes cluster using the Helm package manager.
 
 ## Prerequisites
 
@@ -10,31 +10,31 @@ This Helm chart deploys the Postiz application on a Kubernetes cluster using the
 
 ## Installing the Chart
 
-The Postiz helm chart registry uses the OCI format, not HTTP, which means you do not need to do a `helm repo add` to install the chart. You can install the chart directly from the GitHub repository.
+The PostQueen helm chart registry uses the OCI format, not HTTP, which means you do not need to do a `helm repo add` to install the chart. You can install the chart directly from the GitHub Container Registry.
 
-To install the chart with the release name `postiz-app`:
+To install the chart with the release name `postqueen`:
 
 ```bash
-$ helm install postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postiz-app
+$ helm install postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app
 ```
 
-The command deploys Postiz on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
+The command deploys PostQueen on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
 
 > **Tip**: List all releases using `helm list`
 
 ## Uninstalling the Chart
 
-To uninstall/delete the `postiz` deployment:
+To uninstall/delete the `postqueen` deployment:
 
 ```bash
-$ helm delete postiz-app
+$ helm uninstall postqueen
 ```
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
 ## Parameters
 
-The following table lists the configurable parameters of the Postiz chart and their default values.
+The following table lists the configurable parameters of the PostQueen chart and their default values.
 
 | Parameter                | Description             | Default        |
 | ------------------------ | ----------------------- | -------------- |
@@ -45,11 +45,11 @@ The following table lists the configurable parameters of the Postiz chart and th
 | `service.type`           | Kubernetes service type | `ClusterIP`    |
 | `service.port`           | Kubernetes service port | `80`           |
 | `postgresql.enabled`     | Deploy PostgreSQL       | `true`         |
-| `postgresql.auth.username` | PostgreSQL username   | `postiz`       |
-| `postgresql.auth.password` | PostgreSQL password   | `postiz-password` |
-| `postgresql.auth.database` | PostgreSQL database   | `postiz`       |
+| `postgresql.auth.username` | PostgreSQL username   | `postqueen`       |
+| `postgresql.auth.password` | PostgreSQL password   | `postqueen-password` |
+| `postgresql.auth.database` | PostgreSQL database   | `postqueen`       |
 | `redis.enabled`          | Deploy Redis            | `true`         |
-| `redis.auth.password`    | Redis password          | `postiz-redis-password` |
+| `redis.auth.password`    | Redis password          | `postqueen-redis-password` |
 | `ingress.enabled`        | Enable ingress controller resource    | `false`                  |
 | `ingress.className`      | IngressClass that will be be used     | `""`                     |
 | `ingress.annotations`    | Ingress annotations                   | `{}`                     |
@@ -63,9 +63,9 @@ The following table lists the configurable parameters of the Postiz chart and th
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
 ```bash
-$ helm install postiz-app \
+$ helm install postqueen \
   --set postgresql.auth.password=secretpassword \
-    postiz/postiz
+  oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app
 ```
 
 The above command sets the PostgreSQL password to `secretpassword`.
@@ -79,16 +79,16 @@ postgresql:
 ingress:
   enabled: true
   hosts:
-    - host: postiz.example.com
+    - host: postqueen.example.com
 ```
 
 Then, you can install the chart using the `-f`  flag:
 
 ```bash
-$ helm install postiz-app -f custom-values.yaml postiz/postiz
+$ helm install postqueen -f custom-values.yaml oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app
 ```
 
-> **Tip**: You can use the default [values.yaml](values.yaml) as a starting point for your custom configuration.
+> **Tip**: You can use the default [values.yaml](charts/postqueen/values.yaml) as a starting point for your custom configuration.
 
 
 ## Persistence
@@ -99,7 +99,7 @@ The chart mounts a [Persistent Volume](http://kubernetes.io/docs/user-guide/pers
 
 ### External database support
 
-You may want to have Postiz connect to an external database rather than installing one inside your cluster. Typical reasons for this are to use a managed database service, or to share a common database server for all your applications. To achieve this, set the `postgresql.enabled` parameter to `false` and specify the credentials for the external database using the `postgresql.auth.username`, `postgresql.auth.password`, and `postgresql.auth.database` parameters.
+You may want to have PostQueen connect to an external database rather than installing one inside your cluster. Typical reasons for this are to use a managed database service, or to share a common database server for all your applications. To achieve this, set the `postgresql.enabled` parameter to `false` and specify the credentials for the external database using the `postgresql.auth.username`, `postgresql.auth.password`, and `postgresql.auth.database` parameters.
 
 ### External Redis support
 
@@ -107,9 +107,17 @@ Similar to the database, you can use an external Redis instance by setting `redi
 
 ## Upgrading
 
+### To 1.1.0
+
+PostQueen rebrand. The chart was renamed from `postiz-app` to `postqueen-app` and its
+OCI path is now `oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app`.
+Default database/Redis credentials were renamed to `postqueen*`. If you installed a
+`1.0.x` release, install the new chart under the `postqueen` release name (or set
+`--set postgresql.auth.*` / `redis.auth.*` to keep your existing credentials).
+
 ### To 1.0.0
 
-This is the first major release of the Postiz Helm chart.
+This was the first major release of the Helm chart.
 
 ## Contributing
 
@@ -117,4 +125,4 @@ We welcome contributions to this chart. Please read our [Contributing Guide](CON
 
 ## License
 
-This chart is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
+This chart is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details. It is a fork of the [Postiz Helm chart](https://github.com/gitroomhq/postiz-helmchart) (Apache-2.0) — thanks to its original maintainers.

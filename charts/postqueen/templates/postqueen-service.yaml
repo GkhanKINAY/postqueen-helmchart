@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "postiz.fullname" . }}
+  name: {{ include "postqueen.fullname" . }}
   labels:
-    {{- include "postiz.labels" . | nindent 4 }}
+    {{- include "postqueen.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -15,4 +15,4 @@ spec:
     {{- toYaml .Values.service.additionalPorts | nindent 4 }}
     {{- end }}
   selector:
-    {{- include "postiz.selectorLabels" . | nindent 4 }}
+    {{- include "postqueen.selectorLabels" . | nindent 4 }}
