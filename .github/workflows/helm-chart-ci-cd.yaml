@@ -105,4 +105,4 @@ jobs:
 
       - name: Push Helm chart to GitHub Packages
         run: |
-          helm push ${{ env.CHART_NAME }}*.tgz oci://ghcr.io/${{ github.repository }}/charts
+          helm push ${{ env.CHART_NAME }}*.tgz "oci://ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')/charts"
