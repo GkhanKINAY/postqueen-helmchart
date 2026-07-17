@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: ghcr.io/gitroomhq/postiz-app
+  repository: ghcr.io/gkhankinay/postqueen-app
   pullPolicy: IfNotPresent
   tag: "latest"
 

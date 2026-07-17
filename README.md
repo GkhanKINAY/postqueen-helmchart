@@ -15,7 +15,7 @@ The Postiz helm chart registry uses the OCI format, not HTTP, which means you do
 To install the chart with the release name `postiz-app`:
 
 ```bash
-$ helm install postiz oci://ghcr.io/gitroomhq/postiz-helmchart/charts/postiz-app
+$ helm install postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postiz-app
 ```
 
 The command deploys Postiz on the Kubernetes cluster in the default configuration. The [Parameters](#parameters) section lists the parameters that can be configured during installation.
@@ -39,7 +39,7 @@ The following table lists the configurable parameters of the Postiz chart and th
 | Parameter                | Description             | Default        |
 | ------------------------ | ----------------------- | -------------- |
 | `replicaCount`           | Number of replicas      | `1`            |
-| `image.repository`       | Image repository        | `ghcr.io/gitroomhq/postiz-app` |
+| `image.repository`       | Image repository        | `ghcr.io/gkhankinay/postqueen-app` |
 | `image.pullPolicy`       | Image pull policy       | `IfNotPresent` |
 | `image.tag`              | Image tag               | `latest`       |
 | `service.type`           | Kubernetes service type | `ClusterIP`    |
