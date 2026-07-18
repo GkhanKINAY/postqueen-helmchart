@@ -109,9 +109,8 @@ Similar to the database, you can use an external Redis instance by setting `redi
 
 ### To 1.1.0
 
-PostQueen rebrand. The chart was renamed from `postiz-app` to `postqueen-app` and its
-OCI path is now `oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app`.
-Default database/Redis credentials were renamed to `postqueen*`. If you installed a
+The chart is published at `oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app`,
+and the default database/Redis credentials were renamed to `postqueen*`. If you installed a
 `1.0.x` release, install the new chart under the `postqueen` release name (or set
 `--set postgresql.auth.*` / `redis.auth.*` to keep your existing credentials).
 
