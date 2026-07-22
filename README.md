@@ -1,20 +1,21 @@
 <p align="center">
   <a href="https://postqueen.ai">
-    <img src=".github/assets/header.svg" width="840" alt="PostQueen: deploy the queen of your posts on Kubernetes" />
+    <img src=".github/assets/header.svg" width="840" alt="PostQueen: the queen of your posts, your AI social media assistant" />
   </a>
 </p>
 
-<h3 align="center">🆕&nbsp; NEW: chart <b>1.1.0</b> ships as an OCI artifact straight from the GitHub Container Registry, so there is no <code>helm repo add</code> step.</h3>
+<h3 align="center">🆕&nbsp; NEW: run your social media by talking to your AI. Plan, generate and schedule a whole month of content to 30+ networks just by asking, then review it all in a visual calendar.</h3>
 
 <br/>
 
 <div align="center">
-  <h2>Deploy the queen of your posts on Kubernetes 👑</h2>
   <p>
-    The official Helm chart for PostQueen, the open-source, AI-native social media scheduler.<br/>
-    She writes, designs and schedules across 30+ networks, you just approve.
+    <strong>Stop writing posts by hand.</strong> Tell PostQueen what is going on (a sale, a new product, a<br/>
+    milestone) and she finds the best hook, picks a photo with colors that fit your brand, writes it for<br/>
+    every platform, and lines it up on your calendar. A social media manager for you or your whole team,<br/>
+    a content creator or a business, that never sleeps.
   </p>
-  <p><em>An open-source alternative to Buffer, Hootsuite, Sprout Social and Later.</em></p>
+  <p><strong>PostQueen</strong>: an open-source alternative to <strong>Buffer, Hootsuite, Sprout Social, Later</strong> and more.</p>
 </div>
 
 <br/>
@@ -23,9 +24,10 @@
   <a href="https://postqueen.ai">Website</a> &nbsp;·&nbsp;
   <a href="https://postqueen.ai/pricing">Pricing</a> &nbsp;·&nbsp;
   <a href="https://docs.postqueen.ai">Docs</a> &nbsp;·&nbsp;
-  <a href="https://docs.postqueen.ai/configuration/reference">Config reference</a> &nbsp;·&nbsp;
-  <a href="https://github.com/GkhanKINAY/postqueen-app">App repository</a> &nbsp;·&nbsp;
-  <a href="https://github.com/GkhanKINAY/postqueen-docker-compose">Docker Compose</a>
+  <a href="https://api.postqueen.ai/docs">API Reference</a> &nbsp;·&nbsp;
+  <a href="https://postqueen.ai/agent">Agents</a> &nbsp;·&nbsp;
+  <a href="https://postqueen.ai/mcp">MCP</a> &nbsp;·&nbsp;
+  <a href="https://www.npmjs.com/package/postqueen">CLI</a>
 </p>
 
 <p align="center">
@@ -36,126 +38,110 @@
 </p>
 
 <p align="center">
-  <a href="https://postqueen.ai"><img src=".github/assets/cta-cloud.svg" height="46" alt="Start free on the cloud" /></a>
-  &nbsp;&nbsp;
-  <a href="https://github.com/GkhanKINAY/postqueen-docker-compose"><img src=".github/assets/cta-selfhost.svg" height="46" alt="Self-host it free" /></a>
+  <img src=".github/assets/channels.svg" width="780" alt="Publishes to 30+ social networks" />
 </p>
 
 <p align="center">
-  <em>This chart is the self-host path: PostQueen on your own Kubernetes. Prefer not to run Kubernetes yourself? PostQueen Cloud is the fully managed alternative, free for 7 days at <a href="https://postqueen.ai/pricing">postqueen.ai/pricing</a>.</em>
+  <a href="https://postqueen.ai"><img src=".github/assets/cta-cloud.svg" height="48" alt="Start free for 7 days" /></a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/GkhanKINAY/postqueen-docker-compose"><img src=".github/assets/cta-selfhost.svg" height="48" alt="Self-host it free" /></a>
 </p>
 
-<br/>
+<p align="center">
+  <a href="https://postqueen.ai/pricing"><strong>See pricing »</strong></a>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://docs.postqueen.ai"><strong>Explore the docs »</strong></a>
+</p>
 
 ---
 
 ## 👑 Everything PostQueen does for you
 
-This chart deploys the full PostQueen application. Here is what your users get once the release is running:
-
 <p align="center">
-  <img src=".github/assets/features.svg" width="820" alt="PostQueen features: scheduling, AI assistant, AI design, AI video, auto actions, teamwork, analytics, cross-posting" />
+  <img src=".github/assets/features.svg" width="880" alt="Scheduling, AI Assistant, AI Design, AI Video, Auto Actions, Teamwork, Analytics, Cross-posting" />
 </p>
 
-- 📅 **Scheduling.** Plan every channel on one visual calendar; drag to reschedule, click to edit.
-- 🤖 **AI Assistant.** Generate hooks, captions and threads in your voice, shaped per platform.
-- 🎨 **AI Design.** A built-in, Canva-like editor plus AI image generation for post visuals.
-- 🎬 **AI Video.** Turn a photo and a script into a short vertical video for Reels, Shorts and TikTok.
-- ⚡ **Auto Actions (Plugs).** Auto repost, like and comment when a post hits a milestone.
-- 👥 **Teamwork.** Roles, comments and multi-brand workspaces for your whole team.
-- 📈 **Analytics.** Track post and audience performance on the major networks.
-- 🔁 **Cross-posting.** Write once, tailor each post per channel, and recycle evergreen content on a schedule.
+All of it is real, and all of it is yours to run: PostQueen is fully open-source, so you can use the managed cloud or host the whole thing yourself.
 
 ---
 
-## 🔑 Get your API key
+## 💬 Just talk to your AI
 
-You will need a PostQueen API key for every option below. It takes a minute:
+Think of PostQueen as the social media manager on your team, one you simply talk to. Tell her what is happening and she does the thinking: she finds a hook that fits your topic, picks an image with colors that match your brand, writes a version for each platform, and drops it on your calendar. Ask her in plain words, in **your own language** (PostQueen speaks 16 languages, Turkish included), by text or, if your assistant supports voice, hands-free by speaking.
 
-1. Open **[app.postqueen.ai/settings](https://app.postqueen.ai/settings)** (or your own self-hosted instance).
-2. Go to **Developers → Public API**.
-3. Click **Reveal** to show your key.
-4. Copy it and export it in your shell:
+Just say what you want:
 
-```bash
-export POSTQUEEN_API_KEY="your_api_key"
-```
+> *"Plan a month of content for our coffee shop and fill the calendar."*
 
-Keep it secret: it grants full access to your account. You can revoke or rotate it any time from the same screen.
+> *"Take this photo of today's special and put it on Instagram at lunchtime."*
 
----
+> *"We just hit 10k followers, write a warm thank-you post for all our channels."*
 
-## 🤝 Works with your AI
+> *"Turn my latest YouTube video into posts for X, LinkedIn and Threads."*
 
-This is what makes PostQueen different: **drive it from whatever AI you already talk to.** Every agent connects over the same Agent CLI and hosted MCP server, drafts into your queue, and waits for your approval.
+**You stay in control.** Everything lands in your calendar first, so you can read it, tweak it, or delete it before it goes out. Prefer to sign off on every single post? Ask her to save them as drafts, and nothing publishes until you schedule it yourself.
 
-### 🟣 Claude Code
+<br/>
 
-Tell it, in plain English:
+<p align="center">
+  <img src=".github/assets/works-with.svg" width="760" alt="Works with Claude Code, ChatGPT, Cursor, OpenClaw, Hermes, Codex" />
+</p>
 
-> *"Schedule a tweet for tomorrow morning announcing our new feature, and attach the screenshot from `./assets/launch.png`."*
+Already using an AI assistant? Point it at PostQueen and it drives everything over the same Agent CLI and hosted MCP server.
 
-Claude Code connects over the CLI or MCP and runs, under the hood:
+### Claude Code
+
+> *"Announce our new summer menu on X and Instagram tomorrow at noon, and use the photo in `./menu.jpg`."*
+
+Claude Code connects over the CLI or MCP and does the work for you:
 
 ```bash
 postqueen integrations:list
-postqueen upload ./assets/launch.png
+postqueen upload ./menu.jpg
 postqueen posts:create \
-  -c "We just launched our new feature..." \
+  -c "Our summer menu is here 🌞" \
   -m "<uploaded-url>" \
-  -s "2026-03-02T09:00:00Z" \
-  -i "<x-integration-id>"
+  -s "2026-06-01T12:00:00Z" \
+  -i "<instagram-id>"
 ```
 
-The draft lands in your queue for approval. [Set up Claude Code »](https://postqueen.ai/claude-code)
+[Claude Code integration »](https://postqueen.ai/claude-code)
 
-### 🟢 ChatGPT
+### ChatGPT
 
-Draft and refine in ChatGPT, then let it publish everywhere through the MCP connector.
+> *"Write a fun post about our weekend sale, make a matching image, and schedule it for Friday morning on Instagram and Facebook."*
 
-> *"Write a witty launch post, make a square image for it, and schedule it to X, LinkedIn and Instagram for Tuesday at 9am."*
+Draft and refine in ChatGPT, then let it publish everywhere through the MCP connector. [ChatGPT integration »](https://postqueen.ai/chatgpt)
 
-[Set up ChatGPT »](https://postqueen.ai/chatgpt)
+### Cursor
 
-### 🔵 Cursor
+> *"Turn our latest blog post into three posts and space them across next week."*
 
-Manage your channels without leaving the editor you build in; Cursor drives PostQueen over the CLI or MCP.
+Run your channels without leaving the editor you build in. [Cursor integration »](https://postqueen.ai/cursor)
 
-> *"Post the release notes from CHANGELOG.md to our channels this afternoon."*
+### OpenClaw
 
-[Set up Cursor »](https://postqueen.ai/cursor)
+> *"Create a week of gym content: a tip, a quote and a class reminder, and schedule them all."*
 
-### 🦞 OpenClaw
+Message it from WhatsApp, Telegram, Slack or Discord and it works hands-free. [OpenClaw integration »](https://postqueen.ai/openclaw)
 
-Message it from WhatsApp, Telegram, Slack or Discord and it works hands-free.
+### Hermes
 
-> *"Create 4 posts about fitness for TikTok, LinkedIn, X and Instagram and schedule them for this week."*
+> *"Every Monday, plan the week's posts for our bakery and fill the calendar."*
 
-[Set up OpenClaw »](https://postqueen.ai/openclaw)
+Hand your whole posting routine to an agent that plans and runs multi-step tasks. [Hermes integration »](https://postqueen.ai/hermes-agent)
 
-### ⚡ Hermes
+### Codex
 
-Hand your whole posting pipeline to an agent that plans and runs multi-step tasks end to end.
+> *"Draft a short daily tip for our brand and schedule one for each morning next week."*
 
-> *"Every Monday, turn last week's blog posts into a week of scheduled content."*
+OpenAI's software agent: one prompt in, a scheduled week out. [Codex integration »](https://postqueen.ai/codex)
 
-[Set up Hermes »](https://postqueen.ai/hermes-agent)
-
-### 🟩 Codex
-
-OpenAI's software agent: one prompt in, a scheduled week out, straight from your terminal.
-
-> *"Draft and schedule a daily tip for X and LinkedIn for the next seven days."*
-
-[Set up Codex »](https://postqueen.ai/codex)
-
-### And any other agent
-
-PostQueen's CLI and MCP server are **model-agnostic**, so any MCP client or command-running agent works: **Gemini CLI, Aider, Cline, Warp, Windsurf**, or your own scripts. If it can run a command or speak MCP, it can drive PostQueen.
+**And any other agent.** PostQueen's CLI and MCP server are model-agnostic, so any MCP client or command-running agent works too: **Gemini CLI, Aider, Cline, Warp, Windsurf**, or your own scripts.
 
 ---
 
-## About this chart
+## Deploy on Kubernetes
 
 This Helm chart deploys the [PostQueen](https://postqueen.ai) application on a Kubernetes cluster. It ships the app together with optional bundled PostgreSQL and Redis subcharts, a ConfigMap for non-sensitive settings, and a Secret for credentials, so a full deployment can be configured entirely through `values.yaml`.
 
@@ -163,17 +149,13 @@ The chart is published under its chart name `postqueen-app` (set in [`Chart.yaml
 
 Prefer not to run Kubernetes? PostQueen also runs with plain [Docker Compose](https://github.com/GkhanKINAY/postqueen-docker-compose).
 
----
-
-## Prerequisites
+### Prerequisites
 
 - Kubernetes 1.19+
 - Helm 3.0+
 - PV provisioner support in the underlying infrastructure (if persistence is required)
 
----
-
-## Installing the Chart
+### Installing the chart
 
 The chart is distributed as an OCI artifact from the GitHub Container Registry, so **no `helm repo add` is required**.
 
@@ -195,9 +177,7 @@ helm upgrade postqueen -f custom-values.yaml oci://ghcr.io/gkhankinay/postqueen-
 
 > **Tip:** List all releases with `helm list`.
 
----
-
-## Uninstalling the Chart
+### Uninstalling the chart
 
 To uninstall/delete the `postqueen` release:
 
@@ -207,9 +187,7 @@ helm uninstall postqueen
 
 This removes all the Kubernetes components associated with the chart and deletes the release. Persistent volumes provisioned by the bundled PostgreSQL/Redis are not deleted automatically, so remove their PVCs manually if you no longer need the data.
 
----
-
-## Configuration
+### Configuration
 
 Application settings are split into two maps in `values.yaml`:
 
@@ -218,7 +196,7 @@ Application settings are split into two maps in `values.yaml`:
 
 Both are loaded into the app container via `envFrom`, so every key becomes an environment variable at runtime.
 
-### Environment variables (`env`)
+#### Environment variables (`env`)
 
 | Parameter | Description | Default |
 | --- | --- | --- |
@@ -232,7 +210,7 @@ Both are loaded into the app container via `envFrom`, so every key becomes an en
 | `env.TEMPORAL_ADDRESS` | **Required**: `host:port` of your Temporal server (this chart does not bundle one; unset falls back to `localhost:7233`, which fails in k8s) | `""` |
 | `env.TEMPORAL_NAMESPACE` | Temporal namespace | `"default"` |
 
-### Secrets (`secrets`)
+#### Secrets (`secrets`)
 
 Every key below is stored in the chart's Secret. Leave a key empty to disable the corresponding feature; set only what you need.
 
@@ -264,7 +242,7 @@ Every key below is stored in the chart's Secret. Leave a key empty to disable th
 >   REDIS_URL: "redis://:postqueen-redis-password@postqueen-redis-master:6379"
 > ```
 
-### Example: a real deployment
+#### Example: a real deployment
 
 Create a `custom-values.yaml`:
 
@@ -306,13 +284,11 @@ helm install postqueen \
 
 > **Tip:** Use the shipped [`values.yaml`](charts/postqueen/values.yaml) as a starting point for your own configuration.
 
----
+### Parameters
 
-## Parameters
+The following tables list the configurable parameters of the chart and their defaults. Application settings (`env.*` and `secrets.*`) are documented separately under [Configuration](#configuration).
 
-The following table lists the configurable parameters of the chart and their defaults. Application settings (`env.*` and `secrets.*`) are documented separately under [Configuration](#configuration).
-
-### Core
+#### Core
 
 | Parameter | Description | Default |
 | --- | --- | --- |
@@ -327,7 +303,7 @@ The following table lists the configurable parameters of the chart and their def
 | `service.port` | Service port (maps to container port `5000`) | `80` |
 | `service.additionalPorts` | Extra service ports | `[]` |
 
-### Ingress
+#### Ingress
 
 | Parameter | Description | Default |
 | --- | --- | --- |
@@ -338,7 +314,7 @@ The following table lists the configurable parameters of the chart and their def
 | `ingress.tls` | TLS configuration | `[]` |
 | `ingress.extraRules` | Additional raw ingress rules | `[]` |
 
-### Database & cache (bundled subcharts)
+#### Database & cache (bundled subcharts)
 
 | Parameter | Description | Default |
 | --- | --- | --- |
@@ -349,7 +325,7 @@ The following table lists the configurable parameters of the chart and their def
 | `redis.enabled` | Deploy the bundled Bitnami Redis | `true` |
 | `redis.auth.password` | Bundled Redis password | `postqueen-redis-password` |
 
-### Storage, scheduling & extras
+#### Storage, scheduling & extras
 
 | Parameter | Description | Default |
 | --- | --- | --- |
@@ -367,11 +343,9 @@ The following table lists the configurable parameters of the chart and their def
 
 Specify parameters with the `--set key=value[,key=value]` argument, or with a values file via `-f custom-values.yaml` (see [Configuration](#configuration)).
 
----
+### External database and Redis
 
-## Configuration and installation details
-
-### External database support
+#### External database support
 
 To connect PostQueen to a database outside the cluster (for example a managed service), set `postgresql.enabled: false` so the bundled PostgreSQL is not deployed, then point the app at your database with the **`secrets.DATABASE_URL`** connection string:
 
@@ -383,7 +357,7 @@ secrets:
   DATABASE_URL: "postgresql://user:password@db.example.com:5432/postqueen"
 ```
 
-### External Redis support
+#### External Redis support
 
 Similarly, set `redis.enabled: false` and provide your Redis endpoint through **`secrets.REDIS_URL`**:
 
@@ -395,43 +369,79 @@ secrets:
   REDIS_URL: "redis://:password@redis.example.com:6379"
 ```
 
-### Persistence
+#### Persistence
 
 When the bundled subcharts are enabled, PostgreSQL and Redis each request a [Persistent Volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) via dynamic provisioning, so their data survives pod restarts. Uploaded media is stored on the app pod's `uploads-volume`, which defaults to an `emptyDir` (ephemeral). For durable uploads, either configure object storage with the `secrets.CLOUDFLARE_*` keys, or supply a persistent `extraVolumes`/`extraVolumeMounts` pair pointing at `/uploads`.
 
----
+### Upgrading
 
-## Upgrading
-
-### To 1.1.0
+#### To 1.1.0
 
 The chart is published at `oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app`, and the default database/Redis credentials were renamed to `postqueen*`. If you installed a `1.0.x` release, install the new chart under the `postqueen` release name (or set `--set postgresql.auth.*` / `redis.auth.*` to keep your existing credentials).
 
-### To 1.0.0
+#### To 1.0.0
 
 This was the first major release of the Helm chart.
 
 ---
 
-## ❤️ Community & Support
+## 🧱 Tech stack
 
-We would love to hear from you, whether you hit a snag rolling out the chart, have an idea, or just want to say hi:
-
-- 🐛 **Found a bug or have a feature idea?** [Open an issue](https://github.com/GkhanKINAY/postqueen-app/issues) in the app repository, where all PostQueen development is tracked.
-- 💌 **Need a hand?** Email **support@postqueen.ai**.
-- 📚 **Getting started?** The [docs](https://docs.postqueen.ai) and the [configuration reference](https://docs.postqueen.ai/configuration/reference) walk you through every setting.
-
-If PostQueen saves you time, a ⭐ on the repo genuinely helps other people find it.
+- **pnpm workspaces** (monorepo)
+- **[Next.js](https://nextjs.org)** (React) for the frontend
+- **[NestJS](https://nestjs.com)** for the backend API
+- **[Prisma](https://www.prisma.io)** (default: PostgreSQL)
+- **[Temporal](https://temporal.io)** for scheduling and publishing workers
+- **Redis** for cache and queues
+- **[Resend](https://resend.com)** for email notifications
 
 ---
 
-## Contributing
+## 🔑 Get your API key
 
-Issues and pull requests for this chart are welcome: please open them in the [postqueen-app repository](https://github.com/GkhanKINAY/postqueen-app/issues), where all PostQueen development is tracked.
+You will need an API key to use the CLI, the MCP server, the SDK or the public API. It takes a minute:
 
-## 💜 Thank you, Postiz
+1. Open **[app.postqueen.ai/settings](https://app.postqueen.ai/settings)** (or your own self-hosted instance).
+2. Go to **Developers → Public API**.
+3. Click **Reveal** to show your key.
+4. Copy it and set it in your shell:
 
-PostQueen exists because **Nevo David open-sourced [Postiz](https://github.com/gitroomhq/postiz-app) under AGPL-3.0**. We believe agentic AI will be part of everyday life from 2030 on, and Postiz gave us the perfect open foundation to build our own agentic social media assistant on top of, in our own direction, not as a paywalled clone. Thank you, Nevo and the Postiz contributors. 🙏💜
+```bash
+export POSTQUEEN_API_KEY="your_api_key"
+```
+
+Keep it secret: it grants full access to your account. You can revoke or rotate it any time from the same screen.
+
+---
+
+## 🛡️ Compliance
+
+- PostQueen is an open-source, self-hostable social media scheduler that supports X, LinkedIn, Instagram, Bluesky, Mastodon, Discord and 30+ more.
+- The hosted service uses official, platform-approved OAuth flows.
+- PostQueen does not automate or scrape content from social media platforms.
+- PostQueen does not collect, store, or proxy API keys or access tokens from users.
+- PostQueen never asks users to paste social-platform credentials into the hosted product.
+- Users always authenticate directly with each platform (X, LinkedIn, Discord, and so on), which keeps every platform's compliance and your data privacy intact.
+
+---
+
+## ❤️ Community & Support
+
+We would love to hear from you, whether you hit a bug, have an idea, or just want to say hi:
+
+- 🐛 **Found a bug or have a feature idea?** [Open an issue](https://github.com/GkhanKINAY/postqueen-app/issues).
+- 💌 **Need a hand?** Email **support@postqueen.ai**.
+- 📚 **Getting started?** The [docs](https://docs.postqueen.ai) walk you through everything.
+
+If PostQueen saves you time, a ⭐ on the repo genuinely helps other people find it.
+
+## 💜 Why we built PostQueen, and a thank you
+
+We believe the way we work is about to change. AI is getting better every month, and before long, getting real work done by simply talking to an assistant will feel completely normal. We wanted to build something for that shift, in the spirit of tools we admire like [Chatbase](https://www.chatbase.co) and [Wispr Flow](https://wisprflow.ai).
+
+Social media felt like the perfect place to start: it takes real time and effort, and most of it is work an assistant can carry for you. When we found that Nevo David had open-sourced [Postiz](https://github.com/gitroomhq/postiz-app) under AGPL-3.0, we knew we had the foundation we needed. [PostQueen](https://postqueen.ai) grows that work in its own direction: an assistant that runs your social media, so you can spend your time on everything else.
+
+Thank you, Nevo David and the Postiz contributors. We could not have started this without you. 🙏💜
 
 ## License
 
