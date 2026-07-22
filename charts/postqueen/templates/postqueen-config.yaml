@@ -8,3 +8,10 @@ data:
   {{- range $key, $value := .Values.env }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}
+  {{- if .Values.temporal.enabled }}
+  TEMPORAL_ADDRESS: {{ printf "%s-temporal:7233" (include "postqueen.fullname" .) | quote }}
+  TEMPORAL_NAMESPACE: {{ .Values.temporal.namespace | quote }}
+  {{- else if .Values.temporal.externalAddress }}
+  TEMPORAL_ADDRESS: {{ .Values.temporal.externalAddress | quote }}
+  TEMPORAL_NAMESPACE: {{ .Values.temporal.namespace | quote }}
+  {{- end }}
