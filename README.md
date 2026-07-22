@@ -1,24 +1,30 @@
 <p align="center">
   <a href="https://postqueen.ai">
-    <img src=".github/assets/header.svg" width="820" alt="PostQueen Helm chart" />
+    <img src=".github/assets/header.svg" width="840" alt="PostQueen: deploy the queen of your posts on Kubernetes" />
   </a>
 </p>
 
-<p align="center">
-  <strong>Deploy PostQueen on Kubernetes.</strong><br />
-  The official Helm chart for PostQueen, the open-source, AI-native social media scheduler.
-</p>
+<h3 align="center">🆕&nbsp; NEW: chart <b>1.1.0</b> ships as an OCI artifact straight from the GitHub Container Registry, so there is no <code>helm repo add</code> step.</h3>
+
+<br/>
+
+<div align="center">
+  <h2>Deploy the queen of your posts on Kubernetes 👑</h2>
+  <p>
+    The official Helm chart for PostQueen, the open-source, AI-native social media scheduler.<br/>
+    She writes, designs and schedules across 30+ networks, you just approve.
+  </p>
+  <p><em>An open-source alternative to Buffer, Hootsuite, Sprout Social and Later.</em></p>
+</div>
+
+<br/>
 
 <p align="center">
-  <strong>🆕 NEW:</strong> chart <b>1.1.0</b> ships as an OCI artifact straight from the GitHub Container Registry, so there is no <code>helm repo add</code> step.
-</p>
-
-<p align="center">
-  <a href="https://postqueen.ai">Website</a> ·
-  <a href="https://postqueen.ai/pricing">Pricing</a> ·
-  <a href="https://docs.postqueen.ai">Docs</a> ·
-  <a href="https://docs.postqueen.ai/configuration/reference">Config reference</a> ·
-  <a href="https://github.com/GkhanKINAY/postqueen-app">App repository</a> ·
+  <a href="https://postqueen.ai">Website</a> &nbsp;·&nbsp;
+  <a href="https://postqueen.ai/pricing">Pricing</a> &nbsp;·&nbsp;
+  <a href="https://docs.postqueen.ai">Docs</a> &nbsp;·&nbsp;
+  <a href="https://docs.postqueen.ai/configuration/reference">Config reference</a> &nbsp;·&nbsp;
+  <a href="https://github.com/GkhanKINAY/postqueen-app">App repository</a> &nbsp;·&nbsp;
   <a href="https://github.com/GkhanKINAY/postqueen-docker-compose">Docker Compose</a>
 </p>
 
@@ -33,6 +39,10 @@
   <em>Prefer managed cloud? Start a 7-day free trial at <a href="https://postqueen.ai/pricing">postqueen.ai/pricing</a>.</em>
 </p>
 
+<br/>
+
+> This chart is a fork of the [Postiz Helm chart](https://github.com/gitroomhq/postiz-helmchart) (Apache-2.0). Thanks to its original maintainers for the foundation.
+
 ---
 
 ## About this chart
@@ -43,13 +53,15 @@ The chart is published under its chart name `postqueen-app` (set in [`Chart.yaml
 
 Prefer not to run Kubernetes? PostQueen also runs with plain [Docker Compose](https://github.com/GkhanKINAY/postqueen-docker-compose).
 
-> This chart is a fork of the [Postiz Helm chart](https://github.com/gitroomhq/postiz-helmchart) (Apache-2.0). Thanks to its original maintainers for the foundation.
+---
 
 ## Prerequisites
 
 - Kubernetes 1.19+
 - Helm 3.0+
 - PV provisioner support in the underlying infrastructure (if persistence is required)
+
+---
 
 ## Installing the Chart
 
@@ -73,6 +85,8 @@ helm upgrade postqueen -f custom-values.yaml oci://ghcr.io/gkhankinay/postqueen-
 
 > **Tip:** List all releases with `helm list`.
 
+---
+
 ## Uninstalling the Chart
 
 To uninstall/delete the `postqueen` release:
@@ -82,6 +96,8 @@ helm uninstall postqueen
 ```
 
 This removes all the Kubernetes components associated with the chart and deletes the release. Persistent volumes provisioned by the bundled PostgreSQL/Redis are not deleted automatically, so remove their PVCs manually if you no longer need the data.
+
+---
 
 ## Configuration
 
@@ -180,6 +196,8 @@ helm install postqueen \
 
 > **Tip:** Use the shipped [`values.yaml`](charts/postqueen/values.yaml) as a starting point for your own configuration.
 
+---
+
 ## Parameters
 
 The following table lists the configurable parameters of the chart and their defaults. Application settings (`env.*` and `secrets.*`) are documented separately under [Configuration](#configuration).
@@ -239,6 +257,8 @@ The following table lists the configurable parameters of the chart and their def
 
 Specify parameters with the `--set key=value[,key=value]` argument, or with a values file via `-f custom-values.yaml` (see [Configuration](#configuration)).
 
+---
+
 ## Configuration and installation details
 
 ### External database support
@@ -269,6 +289,8 @@ secrets:
 
 When the bundled subcharts are enabled, PostgreSQL and Redis each request a [Persistent Volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) via dynamic provisioning, so their data survives pod restarts. Uploaded media is stored on the app pod's `uploads-volume`, which defaults to an `emptyDir` (ephemeral). For durable uploads, either configure object storage with the `secrets.CLOUDFLARE_*` keys, or supply a persistent `extraVolumes`/`extraVolumeMounts` pair pointing at `/uploads`.
 
+---
+
 ## Upgrading
 
 ### To 1.1.0
@@ -278,6 +300,20 @@ The chart is published at `oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/p
 ### To 1.0.0
 
 This was the first major release of the Helm chart.
+
+---
+
+## ❤️ Community & Support
+
+We would love to hear from you, whether you hit a snag rolling out the chart, have an idea, or just want to say hi:
+
+- 🐛 **Found a bug or have a feature idea?** [Open an issue](https://github.com/GkhanKINAY/postqueen-app/issues) in the app repository, where all PostQueen development is tracked.
+- 💌 **Need a hand?** Email **support@postqueen.ai**.
+- 📚 **Getting started?** The [docs](https://docs.postqueen.ai) and the [configuration reference](https://docs.postqueen.ai/configuration/reference) walk you through every setting.
+
+If PostQueen saves you time, a ⭐ on the repo genuinely helps other people find it.
+
+---
 
 ## Contributing
 
