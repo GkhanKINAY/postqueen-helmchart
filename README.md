@@ -22,7 +22,7 @@
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="License: Apache-2.0"></a>
   <img src="https://img.shields.io/badge/chart-1.1.0-6d28d9" alt="Chart version 1.1.0">
-  <img src="https://img.shields.io/badge/app-1.3.0-7c3aed" alt="App version 1.3.0">
+  <img src="https://img.shields.io/badge/app-3.0.4-7c3aed" alt="App version 3.0.4">
   <img src="https://img.shields.io/badge/Helm-3.0+-0f1689" alt="Helm 3.0+">
 </p>
 
@@ -53,6 +53,14 @@ helm install postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postq
 ```
 
 This deploys PostQueen with the default configuration — including bundled PostgreSQL and Redis. Before exposing it publicly you should at minimum set a unique `secrets.JWT_SECRET` and the connection strings described in [Configuration](#configuration). The [Parameters](#parameters) section lists everything that can be tuned.
+
+> **Requires a Temporal server.** PostQueen uses [Temporal](https://temporal.io) for scheduling and publishing — the app reads `TEMPORAL_ADDRESS` (default `localhost:7233`). This chart does **not** bundle Temporal, so run one alongside the release (or point at an existing cluster) and set `env.TEMPORAL_ADDRESS` to its `host:port`. Without it the UI loads but scheduled publishing will not run.
+
+To upgrade an existing release after changing values or pulling a newer chart:
+
+```bash
+helm upgrade postqueen -f custom-values.yaml oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app
+```
 
 > **Tip:** List all releases with `helm list`.
 
