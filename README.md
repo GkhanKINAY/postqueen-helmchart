@@ -36,12 +36,39 @@
 </p>
 
 <p align="center">
-  <em>Prefer managed cloud? Start a 7-day free trial at <a href="https://postqueen.ai/pricing">postqueen.ai/pricing</a>.</em>
+  <a href="https://postqueen.ai"><img src=".github/assets/cta-cloud.svg" height="46" alt="Start free for 7 days" /></a>
+</p>
+
+<p align="center">
+  <em>Prefer managed cloud to running Kubernetes yourself? Start a 7-day free trial at <a href="https://postqueen.ai/pricing">postqueen.ai/pricing</a>.</em>
 </p>
 
 <br/>
 
-> This chart is a fork of the [Postiz Helm chart](https://github.com/gitroomhq/postiz-helmchart) (Apache-2.0). Thanks to its original maintainers for the foundation.
+---
+
+## 👑 Everything PostQueen does for you
+
+This chart deploys the full PostQueen application. Here is what your users get once the release is running:
+
+<p align="center">
+  <img src=".github/assets/features.svg" width="820" alt="PostQueen features: scheduling, AI assistant, AI design, AI video, auto actions, teamwork, analytics, marketplace" />
+</p>
+
+- 📅 **Scheduling.** Plan every channel on one visual calendar; drag to reschedule, click to edit.
+- 🤖 **AI Assistant.** Generate hooks, captions and threads in your voice, shaped per platform.
+- 🎨 **AI Design.** A built-in, Canva-like editor plus AI image generation for post visuals.
+- 🎬 **AI Video.** Turn a photo and a script into a short vertical video for Reels, Shorts and TikTok.
+- ⚡ **Auto Actions (Plugs).** Auto repost, like and comment when a post hits a milestone.
+- 👥 **Teamwork.** Roles, comments, approvals and multi-brand workspaces for your whole team.
+- 📈 **Analytics.** Track post and audience performance on the major networks.
+- 🛒 **Marketplace.** Buy or exchange posts with other members.
+
+---
+
+## 🤝 Works with your AI
+
+PostQueen is model-agnostic: once the release is up, your team can drive it from the AI tools they already use. Claude Code, ChatGPT, Cursor, OpenClaw, Hermes, Codex and any MCP client all connect over the same Agent CLI and hosted MCP server, so posts can be drafted and scheduled straight from a chat or a terminal, with a human still approving before anything ships. See the [Agent CLI](https://postqueen.ai/agent) and [MCP](https://postqueen.ai/mcp) guides.
 
 ---
 
