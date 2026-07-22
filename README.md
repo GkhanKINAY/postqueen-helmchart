@@ -54,7 +54,7 @@ helm install postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postq
 
 This deploys PostQueen with the default configuration — including bundled PostgreSQL and Redis. Before exposing it publicly you should at minimum set a unique `secrets.JWT_SECRET` and the connection strings described in [Configuration](#configuration). The [Parameters](#parameters) section lists everything that can be tuned.
 
-> **Temporal is bundled.** PostQueen uses [Temporal](https://temporal.io) for scheduling and publishing. By default this chart deploys a Temporal server with its own PostgreSQL (persistence + visibility, no Elasticsearch) and wires the app to it automatically — nothing to configure. To use an existing/external Temporal instead, set `temporal.enabled=false` and `temporal.externalAddress` to its `host:port`.
+> **Requires a Temporal server.** PostQueen uses [Temporal](https://temporal.io) for scheduling and publishing — the app reads `TEMPORAL_ADDRESS` (default `localhost:7233`). This chart does **not** bundle Temporal, so run one alongside the release (or point at an existing cluster) and set `env.TEMPORAL_ADDRESS` to its `host:port`. Without it the UI loads but scheduled publishing will not run.
 
 To upgrade an existing release after changing values or pulling a newer chart:
 
@@ -94,10 +94,8 @@ Both are loaded into the app container via `envFrom`, so every key becomes an en
 | `env.NEXT_PUBLIC_UPLOAD_STATIC_DIRECTORY` | Public path used to serve uploaded media | `""` |
 | `env.NX_ADD_PLUGINS` | Nx plugin flag (leave as-is for most deployments) | `"false"` |
 | `env.IS_GENERAL` | Enable general (self-host) mode | `"true"` |
-| `temporal.enabled` | Deploy a bundled Temporal server (+ its own PostgreSQL) and auto-wire the app to it | `true` |
-| `temporal.externalAddress` | `host:port` of an external Temporal — used only when `temporal.enabled` is `false` | `""` |
-| `temporal.image.tag` | Temporal `auto-setup` image tag | `"1.28.1"` |
-| `temporal.postgresql.persistence.size` | PVC size for Temporal's PostgreSQL | `8Gi` |
+| `env.TEMPORAL_ADDRESS` | **Required** — `host:port` of your Temporal server (this chart does not bundle one; unset falls back to `localhost:7233`, which fails in k8s) | `""` |
+| `env.TEMPORAL_NAMESPACE` | Temporal namespace | `"default"` |
 
 ### Secrets (`secrets`)
 
