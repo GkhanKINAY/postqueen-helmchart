@@ -36,11 +36,13 @@
 </p>
 
 <p align="center">
-  <a href="https://postqueen.ai"><img src=".github/assets/cta-cloud.svg" height="46" alt="Start free for 7 days" /></a>
+  <a href="https://postqueen.ai"><img src=".github/assets/cta-cloud.svg" height="46" alt="Start free on the cloud" /></a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/GkhanKINAY/postqueen-docker-compose"><img src=".github/assets/cta-selfhost.svg" height="46" alt="Self-host it free" /></a>
 </p>
 
 <p align="center">
-  <em>Prefer managed cloud to running Kubernetes yourself? Start a 7-day free trial at <a href="https://postqueen.ai/pricing">postqueen.ai/pricing</a>.</em>
+  <em>This chart is the self-host path: PostQueen on your own Kubernetes. Prefer not to run Kubernetes yourself? PostQueen Cloud is the fully managed alternative, free for 7 days at <a href="https://postqueen.ai/pricing">postqueen.ai/pricing</a>.</em>
 </p>
 
 <br/>
@@ -52,7 +54,7 @@
 This chart deploys the full PostQueen application. Here is what your users get once the release is running:
 
 <p align="center">
-  <img src=".github/assets/features.svg" width="820" alt="PostQueen features: scheduling, AI assistant, AI design, AI video, auto actions, teamwork, analytics, marketplace" />
+  <img src=".github/assets/features.svg" width="820" alt="PostQueen features: scheduling, AI assistant, AI design, AI video, auto actions, teamwork, analytics, cross-posting" />
 </p>
 
 - 📅 **Scheduling.** Plan every channel on one visual calendar; drag to reschedule, click to edit.
@@ -60,15 +62,96 @@ This chart deploys the full PostQueen application. Here is what your users get o
 - 🎨 **AI Design.** A built-in, Canva-like editor plus AI image generation for post visuals.
 - 🎬 **AI Video.** Turn a photo and a script into a short vertical video for Reels, Shorts and TikTok.
 - ⚡ **Auto Actions (Plugs).** Auto repost, like and comment when a post hits a milestone.
-- 👥 **Teamwork.** Roles, comments, approvals and multi-brand workspaces for your whole team.
+- 👥 **Teamwork.** Roles, comments and multi-brand workspaces for your whole team.
 - 📈 **Analytics.** Track post and audience performance on the major networks.
-- 🛒 **Marketplace.** Buy or exchange posts with other members.
+- 🔁 **Cross-posting.** Write once, tailor each post per channel, and recycle evergreen content on a schedule.
+
+---
+
+## 🔑 Get your API key
+
+You will need a PostQueen API key for every option below. It takes a minute:
+
+1. Open **[app.postqueen.ai/settings](https://app.postqueen.ai/settings)** (or your own self-hosted instance).
+2. Go to **Developers → Public API**.
+3. Click **Reveal** to show your key.
+4. Copy it and export it in your shell:
+
+```bash
+export POSTQUEEN_API_KEY="your_api_key"
+```
+
+Keep it secret: it grants full access to your account. You can revoke or rotate it any time from the same screen.
 
 ---
 
 ## 🤝 Works with your AI
 
-PostQueen is model-agnostic: once the release is up, your team can drive it from the AI tools they already use. Claude Code, ChatGPT, Cursor, OpenClaw, Hermes, Codex and any MCP client all connect over the same Agent CLI and hosted MCP server, so posts can be drafted and scheduled straight from a chat or a terminal, with a human still approving before anything ships. See the [Agent CLI](https://postqueen.ai/agent) and [MCP](https://postqueen.ai/mcp) guides.
+This is what makes PostQueen different: **drive it from whatever AI you already talk to.** Every agent connects over the same Agent CLI and hosted MCP server, drafts into your queue, and waits for your approval.
+
+### 🟣 Claude Code
+
+Tell it, in plain English:
+
+> *"Schedule a tweet for tomorrow morning announcing our new feature, and attach the screenshot from `./assets/launch.png`."*
+
+Claude Code connects over the CLI or MCP and runs, under the hood:
+
+```bash
+postqueen integrations:list
+postqueen upload ./assets/launch.png
+postqueen posts:create \
+  -c "We just launched our new feature..." \
+  -m "<uploaded-url>" \
+  -s "2026-03-02T09:00:00Z" \
+  -i "<x-integration-id>"
+```
+
+The draft lands in your queue for approval. [Set up Claude Code »](https://postqueen.ai/claude-code)
+
+### 🟢 ChatGPT
+
+Draft and refine in ChatGPT, then let it publish everywhere through the MCP connector.
+
+> *"Write a witty launch post, make a square image for it, and schedule it to X, LinkedIn and Instagram for Tuesday at 9am."*
+
+[Set up ChatGPT »](https://postqueen.ai/chatgpt)
+
+### 🔵 Cursor
+
+Manage your channels without leaving the editor you build in; Cursor drives PostQueen over the CLI or MCP.
+
+> *"Post the release notes from CHANGELOG.md to our channels this afternoon."*
+
+[Set up Cursor »](https://postqueen.ai/cursor)
+
+### 🦞 OpenClaw
+
+Message it from WhatsApp, Telegram, Slack or Discord and it works hands-free.
+
+> *"Create 4 posts about fitness for TikTok, LinkedIn, X and Instagram and schedule them for this week."*
+
+[Set up OpenClaw »](https://postqueen.ai/openclaw)
+
+### ⚡ Hermes
+
+Hand your whole posting pipeline to an agent that plans and runs multi-step tasks end to end.
+
+> *"Every Monday, turn last week's blog posts into a week of scheduled content."*
+
+[Set up Hermes »](https://postqueen.ai/hermes-agent)
+
+### 🟩 Codex
+
+OpenAI's software agent: one prompt in, a scheduled week out, straight from your terminal.
+
+> *"Draft and schedule a daily tip for X and LinkedIn for the next seven days."*
+
+[Set up Codex »](https://postqueen.ai/codex)
+
+### And any other agent
+
+PostQueen's CLI and MCP server are **model-agnostic**, so any MCP client or command-running agent works: **Gemini CLI, Aider, Cline, Warp, Windsurf**, or your own scripts. If it can run a command or speak MCP, it can drive PostQueen.
 
 ---
 
