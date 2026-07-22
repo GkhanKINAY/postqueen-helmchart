@@ -14,6 +14,7 @@
 <p align="center">
   <a href="https://postqueen.ai">Website</a> ·
   <a href="https://app.postqueen.ai">Live App</a> ·
+  <a href="https://docs.postqueen.ai">Docs</a> ·
   <a href="https://github.com/GkhanKINAY/postqueen-app">App Repository</a> ·
   <a href="https://github.com/GkhanKINAY/postqueen-docker-compose">Docker Compose</a>
 </p>
