@@ -1,21 +1,24 @@
 <p align="center">
   <a href="https://postqueen.ai">
-    <img src="https://postqueen.ai/icon.svg" width="76" alt="PostQueen" />
+    <img src=".github/assets/header.svg" width="820" alt="PostQueen Helm chart" />
   </a>
 </p>
 
-<h1 align="center">PostQueen Helm Chart</h1>
-
 <p align="center">
   <strong>Deploy PostQueen on Kubernetes.</strong><br />
-  The official Helm chart for PostQueen — the open-source, AI-native social media scheduler.
+  The official Helm chart for PostQueen, the open-source, AI-native social media scheduler.
+</p>
+
+<p align="center">
+  <strong>🆕 NEW:</strong> chart <b>1.1.0</b> ships as an OCI artifact straight from the GitHub Container Registry, so there is no <code>helm repo add</code> step.
 </p>
 
 <p align="center">
   <a href="https://postqueen.ai">Website</a> ·
-  <a href="https://app.postqueen.ai">Live App</a> ·
+  <a href="https://postqueen.ai/pricing">Pricing</a> ·
   <a href="https://docs.postqueen.ai">Docs</a> ·
-  <a href="https://github.com/GkhanKINAY/postqueen-app">App Repository</a> ·
+  <a href="https://docs.postqueen.ai/configuration/reference">Config reference</a> ·
+  <a href="https://github.com/GkhanKINAY/postqueen-app">App repository</a> ·
   <a href="https://github.com/GkhanKINAY/postqueen-docker-compose">Docker Compose</a>
 </p>
 
@@ -26,11 +29,17 @@
   <img src="https://img.shields.io/badge/Helm-3.0+-0f1689" alt="Helm 3.0+">
 </p>
 
+<p align="center">
+  <em>Prefer managed cloud? Start a 7-day free trial at <a href="https://postqueen.ai/pricing">postqueen.ai/pricing</a>.</em>
+</p>
+
 ---
 
 ## About this chart
 
-This Helm chart deploys the [PostQueen](https://postqueen.ai) application on a Kubernetes cluster. It ships the app together with optional bundled PostgreSQL and Redis subcharts, a ConfigMap for non-sensitive settings, and a Secret for credentials — so a full deployment can be configured entirely through `values.yaml`.
+This Helm chart deploys the [PostQueen](https://postqueen.ai) application on a Kubernetes cluster. It ships the app together with optional bundled PostgreSQL and Redis subcharts, a ConfigMap for non-sensitive settings, and a Secret for credentials, so a full deployment can be configured entirely through `values.yaml`.
+
+The chart is published under its chart name `postqueen-app` (set in [`Chart.yaml`](charts/postqueen/Chart.yaml)), which is why the OCI reference ends in `.../charts/postqueen-app`. In this repository the chart source lives in the `charts/postqueen/` directory, so install commands use the chart name `postqueen-app` while any local edit points at `charts/postqueen/values.yaml`.
 
 Prefer not to run Kubernetes? PostQueen also runs with plain [Docker Compose](https://github.com/GkhanKINAY/postqueen-docker-compose).
 
@@ -52,9 +61,9 @@ To install the chart with the release name `postqueen`:
 helm install postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app
 ```
 
-This deploys PostQueen with the default configuration — including bundled PostgreSQL and Redis. Before exposing it publicly you should at minimum set a unique `secrets.JWT_SECRET` and the connection strings described in [Configuration](#configuration). The [Parameters](#parameters) section lists everything that can be tuned.
+This deploys PostQueen with the default configuration, including bundled PostgreSQL and Redis. Before exposing it publicly you should at minimum set a unique `secrets.JWT_SECRET` and the connection strings described in [Configuration](#configuration). The [Parameters](#parameters) section lists everything that can be tuned.
 
-> **Requires a Temporal server.** PostQueen uses [Temporal](https://temporal.io) for scheduling and publishing — the app reads `TEMPORAL_ADDRESS` (default `localhost:7233`). This chart does **not** bundle Temporal, so run one alongside the release (or point at an existing cluster) and set `env.TEMPORAL_ADDRESS` to its `host:port`. Without it the UI loads but scheduled publishing will not run.
+> **Requires a Temporal server.** PostQueen uses [Temporal](https://temporal.io) for scheduling and publishing: the app reads `TEMPORAL_ADDRESS` (default `localhost:7233`). This chart does **not** bundle Temporal, so run one alongside the release (or point at an existing cluster) and set `env.TEMPORAL_ADDRESS` to its `host:port`. Without it the UI loads but scheduled publishing will not run.
 
 To upgrade an existing release after changing values or pulling a newer chart:
 
@@ -72,14 +81,14 @@ To uninstall/delete the `postqueen` release:
 helm uninstall postqueen
 ```
 
-This removes all the Kubernetes components associated with the chart and deletes the release. Persistent volumes provisioned by the bundled PostgreSQL/Redis are not deleted automatically — remove their PVCs manually if you no longer need the data.
+This removes all the Kubernetes components associated with the chart and deletes the release. Persistent volumes provisioned by the bundled PostgreSQL/Redis are not deleted automatically, so remove their PVCs manually if you no longer need the data.
 
 ## Configuration
 
 Application settings are split into two maps in `values.yaml`:
 
-- **`env`** — non-sensitive values, rendered into a **ConfigMap**.
-- **`secrets`** — credentials and connection strings, rendered into a **Secret**.
+- **`env`**: non-sensitive values, rendered into a **ConfigMap**.
+- **`secrets`**: credentials and connection strings, rendered into a **Secret**.
 
 Both are loaded into the app container via `envFrom`, so every key becomes an environment variable at runtime.
 
@@ -94,7 +103,7 @@ Both are loaded into the app container via `envFrom`, so every key becomes an en
 | `env.NEXT_PUBLIC_UPLOAD_STATIC_DIRECTORY` | Public path used to serve uploaded media | `""` |
 | `env.NX_ADD_PLUGINS` | Nx plugin flag (leave as-is for most deployments) | `"false"` |
 | `env.IS_GENERAL` | Enable general (self-host) mode | `"true"` |
-| `env.TEMPORAL_ADDRESS` | **Required** — `host:port` of your Temporal server (this chart does not bundle one; unset falls back to `localhost:7233`, which fails in k8s) | `""` |
+| `env.TEMPORAL_ADDRESS` | **Required**: `host:port` of your Temporal server (this chart does not bundle one; unset falls back to `localhost:7233`, which fails in k8s) | `""` |
 | `env.TEMPORAL_NAMESPACE` | Temporal namespace | `"default"` |
 
 ### Secrets (`secrets`)
@@ -105,7 +114,7 @@ Every key below is stored in the chart's Secret. Leave a key empty to disable th
 | --- | --- | --- |
 | `secrets.DATABASE_URL` | PostgreSQL connection string used by the app | `""` |
 | `secrets.REDIS_URL` | Redis connection string used by the app | `""` |
-| `secrets.JWT_SECRET` | Secret used to sign auth tokens — **set a unique value** | `""` |
+| `secrets.JWT_SECRET` | Secret used to sign auth tokens (**set a unique value**) | `""` |
 | `secrets.X_API_KEY` | X (Twitter) OAuth API key | `""` |
 | `secrets.X_API_SECRET` | X (Twitter) OAuth API secret | `""` |
 | `secrets.LINKEDIN_CLIENT_ID` | LinkedIn OAuth client ID | `""` |
@@ -121,7 +130,7 @@ Every key below is stored in the chart's Secret. Leave a key empty to disable th
 | `secrets.CLOUDFLARE_BUCKETNAME` | Cloudflare R2 bucket name | `""` |
 | `secrets.CLOUDFLARE_BUCKET_URL` | Public base URL of the R2 bucket | `""` |
 
-> **The app always reads its database and cache endpoints from `secrets.DATABASE_URL` and `secrets.REDIS_URL`** — the chart does not auto-derive them from the bundled subcharts. With a release named `postqueen` and the default bundled services, they typically look like:
+> **The app always reads its database and cache endpoints from `secrets.DATABASE_URL` and `secrets.REDIS_URL`.** The chart does not auto-derive them from the bundled subcharts. With a release named `postqueen` and the default bundled services, they typically look like:
 >
 > ```yaml
 > secrets:
@@ -272,8 +281,8 @@ This was the first major release of the Helm chart.
 
 ## Contributing
 
-Issues and pull requests for this chart are welcome — please open them in the [postqueen-app repository](https://github.com/GkhanKINAY/postqueen-app/issues), where all PostQueen development is tracked.
+Issues and pull requests for this chart are welcome: please open them in the [postqueen-app repository](https://github.com/GkhanKINAY/postqueen-app/issues), where all PostQueen development is tracked.
 
 ## License
 
-This chart is licensed under the Apache License 2.0 — see the [LICENSE](LICENSE) file for details. It is a fork of the [Postiz Helm chart](https://github.com/gitroomhq/postiz-helmchart) (Apache-2.0) — thanks to its original maintainers.
+This chart is licensed under the Apache License 2.0, see the [LICENSE](LICENSE) file for details. It is a fork of the [Postiz Helm chart](https://github.com/gitroomhq/postiz-helmchart) (Apache-2.0). Thanks to its original maintainers.
