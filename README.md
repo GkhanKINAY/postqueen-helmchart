@@ -346,6 +346,10 @@ If PostQueen saves you time, a ⭐ on the repo genuinely helps other people find
 
 Issues and pull requests for this chart are welcome: please open them in the [postqueen-app repository](https://github.com/GkhanKINAY/postqueen-app/issues), where all PostQueen development is tracked.
 
+## 💜 Thank you, Postiz
+
+PostQueen exists because **Nevo David open-sourced [Postiz](https://github.com/gitroomhq/postiz-app) under AGPL-3.0**. We believe agentic AI will be part of everyday life from 2030 on, and Postiz gave us the perfect open foundation to build our own agentic social media assistant on top of, in our own direction, not as a paywalled clone. Thank you, Nevo and the Postiz contributors. 🙏💜
+
 ## License
 
 This chart is licensed under the Apache License 2.0, see the [LICENSE](LICENSE) file for details. It is a fork of the [Postiz Helm chart](https://github.com/gitroomhq/postiz-helmchart) (Apache-2.0). Thanks to its original maintainers.
