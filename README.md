@@ -94,6 +94,8 @@ Both are loaded into the app container via `envFrom`, so every key becomes an en
 | `env.NEXT_PUBLIC_UPLOAD_STATIC_DIRECTORY` | Public path used to serve uploaded media | `""` |
 | `env.NX_ADD_PLUGINS` | Nx plugin flag (leave as-is for most deployments) | `"false"` |
 | `env.IS_GENERAL` | Enable general (self-host) mode | `"true"` |
+| `env.TEMPORAL_ADDRESS` | **Required** — `host:port` of your Temporal server (this chart does not bundle one; unset falls back to `localhost:7233`, which fails in k8s) | `""` |
+| `env.TEMPORAL_NAMESPACE` | Temporal namespace | `"default"` |
 
 ### Secrets (`secrets`)
 
