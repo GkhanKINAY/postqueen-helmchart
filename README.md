@@ -83,7 +83,7 @@
 
 ## ⚠️ Before you install
 
-Two things people miss, and one convention worth knowing:
+Three things worth knowing before your first `helm install`, because each one has caught someone:
 
 - **The chart does not bundle Temporal.** PostQueen uses [Temporal](https://temporal.io) for scheduling and publishing: the app reads `TEMPORAL_ADDRESS` (default `localhost:7233`, which fails inside a cluster). Run a Temporal server alongside the release, or point at an existing one, and set `env.TEMPORAL_ADDRESS` to its `host:port`. Without it the UI loads but scheduled publishing will not run.
 - **Production needs a public HTTPS domain.** To connect real social accounts, expose the release through an ingress with TLS on a public domain, because the social networks send their OAuth callbacks there.
@@ -95,7 +95,7 @@ Two things people miss, and one convention worth knowing:
 
 This Helm chart deploys the [PostQueen](https://postqueen.ai) application on a Kubernetes cluster. It ships the app together with optional bundled PostgreSQL and Redis subcharts, a ConfigMap for non-sensitive settings, and a Secret for credentials, so a full deployment can be configured entirely through `values.yaml`.
 
-The chart is published under its chart name `postqueen-app` (set in [`Chart.yaml`](charts/postqueen/Chart.yaml)), which is why the OCI reference ends in `.../charts/postqueen-app`. In this repository the chart source lives in the `charts/postqueen/` directory, so install commands use the chart name `postqueen-app` while any local edit points at `charts/postqueen/values.yaml`.
+One naming note saves confusion later: the chart's published name is `postqueen-app` (set in [`Chart.yaml`](charts/postqueen/Chart.yaml)), so that is what the OCI reference ends in. Inside this repository the same chart lives in the `charts/postqueen/` directory, which is where you edit `values.yaml` locally.
 
 ### Prerequisites
 
@@ -345,15 +345,15 @@ If you do not need Kubernetes, the same stack runs with a single command via [po
 
 ## 🦞 Meet her open agents: OpenClaw &amp; Hermes
 
-The two open-source agents everyone is running right now both speak PostQueen natively. **OpenClaw** lives on your machine and answers you from any chat app. **Hermes** does that too — and give it one brief, it plans your whole week on its own. Both drive the same `postqueen` CLI.
+Two open-source agents already speak PostQueen natively. **OpenClaw** lives on your machine and turns any chat app into her front door. **Hermes** does the same, then goes further: hand it a single brief and it plans, writes and schedules your entire week on its own. Both drive the same `postqueen` CLI, so everything they do shows up on your calendar.
 
 <p align="center">
   <img src=".github/assets/open-agents.svg" width="660" alt="OpenClaw and Hermes running PostQueen: chat apps feed OpenClaw, a one-line brief feeds Hermes, both drive the postqueen CLI and posts land on the calendar" />
 </p>
 
-<a href="https://postqueen.ai/openclaw"><img src=".github/assets/spotlight-openclaw.svg" width="410" alt="OpenClaw: runs on your machine; message her from WhatsApp, Telegram, Slack or Discord — set-up guide" /></a> <a href="https://postqueen.ai/hermes-agent"><img src=".github/assets/spotlight-hermes.svg" width="410" alt="Hermes: the self-improving autonomous agent; one brief becomes a planned, verified week — set-up guide" /></a>
+<a href="https://postqueen.ai/openclaw"><img src=".github/assets/spotlight-openclaw.svg" width="410" alt="OpenClaw: runs on your machine and takes her messages from WhatsApp, Telegram, Slack or Discord. Opens the set-up guide." /></a> <a href="https://postqueen.ai/hermes-agent"><img src=".github/assets/spotlight-hermes.svg" width="410" alt="Hermes: the self-improving autonomous agent that turns one brief into a planned, verified week. Opens the set-up guide." /></a>
 
-**Any other agent works too** — anything that can run a CLI command or call MCP can run your socials. [Agent guide »](https://postqueen.ai/agent)
+**Any other agent works too.** If it can run a CLI command or call MCP, it can run your socials. [Agent guide »](https://postqueen.ai/agent)
 
 <br/>
 
@@ -361,7 +361,7 @@ The two open-source agents everyone is running right now both speak PostQueen na
 
 ## 🌐 Publish everywhere
 
-Write once, be everywhere. PostQueen publishes to **30+ networks** out of the box:
+One post from you, and she is everywhere at once. PostQueen publishes to **30+ networks** out of the box:
 
 <p align="center">
   <img src=".github/assets/channels/instagram.svg" height="44" alt="Instagram" /> <img src=".github/assets/channels/youtube.svg" height="44" alt="YouTube" /> <img src=".github/assets/channels/google-business.svg" height="44" alt="Google Business Profile" /> <img src=".github/assets/channels/dribbble.svg" height="44" alt="Dribbble" /> <img src=".github/assets/channels/linkedin.svg" height="44" alt="LinkedIn" /> <img src=".github/assets/channels/reddit.svg" height="44" alt="Reddit" /> <img src=".github/assets/channels/tiktok.svg" height="44" alt="TikTok" /> <img src=".github/assets/channels/facebook.svg" height="44" alt="Facebook" /> <img src=".github/assets/channels/pinterest.svg" height="44" alt="Pinterest" /> <img src=".github/assets/channels/threads.svg" height="44" alt="Threads" /> <img src=".github/assets/channels/x.svg" height="44" alt="X" /> <img src=".github/assets/channels/slack.svg" height="44" alt="Slack" /> <img src=".github/assets/channels/discord.svg" height="44" alt="Discord" /> <img src=".github/assets/channels/mastodon.svg" height="44" alt="Mastodon" /> <img src=".github/assets/channels/bluesky.svg" height="44" alt="Bluesky" /> <img src=".github/assets/channels/lemmy.svg" height="44" alt="Lemmy" /> <img src=".github/assets/channels/warpcast.svg" height="44" alt="Farcaster" /> <img src=".github/assets/channels/telegram.svg" height="44" alt="Telegram" /> <img src=".github/assets/channels/nostr.svg" height="44" alt="Nostr" /> <img src=".github/assets/channels/vk.svg" height="44" alt="VK" /> <img src=".github/assets/channels/devto.svg" height="44" alt="Dev.to" /> <img src=".github/assets/channels/medium.svg" height="44" alt="Medium" /> <img src=".github/assets/channels/hashnode.svg" height="44" alt="Hashnode" /> <img src=".github/assets/channels/wordpress.svg" height="44" alt="WordPress" /> <img src=".github/assets/channels/whop.svg" height="44" alt="Whop" /> <img src=".github/assets/channels/kick.svg" height="44" alt="Kick" /> <img src=".github/assets/channels/mewe.svg" height="44" alt="MeWe" /> <img src=".github/assets/channels/twitch.svg" height="44" alt="Twitch" /> <img src=".github/assets/channels/listmonk.svg" height="44" alt="Listmonk" /> <img src=".github/assets/channels/skool.svg" height="44" alt="Skool" />
