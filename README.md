@@ -386,6 +386,33 @@ LinkedIn and Instagram each support both personal and page posting. New connecto
 
 ---
 
+## 🧱 Under the hood
+
+- **pnpm workspaces** monorepo
+- **[Next.js](https://nextjs.org)** (React) frontend
+- **[NestJS](https://nestjs.com)** backend API
+- **[Prisma](https://www.prisma.io)** ORM on **PostgreSQL**
+- **[Temporal](https://temporal.io)** for durable scheduling: posts fire on time even through crashes and restarts
+- **Redis** for cache and queues
+- **[Resend](https://resend.com)** for email notifications
+
+<br/>
+
+---
+
+## 🛡️ Compliance
+
+- PostQueen is an open-source, self-hostable social media scheduler that supports X, LinkedIn, Instagram, Bluesky, Mastodon, Discord and 30+ more.
+- The hosted service uses official, platform-approved OAuth flows.
+- PostQueen does not automate or scrape content from social media platforms.
+- PostQueen does not collect, store, or proxy API keys or access tokens from users.
+- PostQueen never asks users to paste social-platform credentials into the hosted product.
+- Users always authenticate directly with each platform (X, LinkedIn, Discord, and so on), which keeps every platform's compliance and your data privacy intact.
+
+<br/>
+
+---
+
 ## ❤️ Community and support
 
 - 🐛 **Found a bug or have an idea?** [Open an issue](https://github.com/GkhanKINAY/postqueen-helmchart/issues).
