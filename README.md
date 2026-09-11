@@ -40,8 +40,8 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="License: Apache-2.0"></a>
-  <img src="https://img.shields.io/badge/chart-1.1.0-6d28d9" alt="Chart version 1.1.0">
-  <img src="https://img.shields.io/badge/app-3.0.4-7c3aed" alt="App version 3.0.4">
+  <img src="https://img.shields.io/badge/chart-1.1.1-6d28d9" alt="Chart version 1.1.1">
+  <img src="https://img.shields.io/badge/app-v3.6.0-7c3aed" alt="App version v3.6.0">
   <img src="https://img.shields.io/badge/Helm-3.0+-0f1689" alt="Helm 3.0+">
 </p>
 
@@ -326,6 +326,10 @@ When the bundled subcharts are enabled, PostgreSQL and Redis each request a [Per
 ---
 
 ## ⬆️ Upgrading
+
+### To 1.1.1
+
+`appVersion` is `v3.6.0`, the current app release. It was `3.0.4`, which named no published image (app tags carry a `v`), so leaving `image.tag` empty pulled a tag that does not exist. The default `image.tag` is still `latest`; nothing changes for installs that keep it.
 
 ### To 1.1.0
 
