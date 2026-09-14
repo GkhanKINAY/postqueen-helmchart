@@ -84,10 +84,18 @@ redis:
         redis: 6379
 
 # Environment variables
+#
+# The published image is all-in-one: nginx on container port 5000 (Service 80)
+# fronts Next.js and NestJS in the same pod. There is no `backend` Service.
+# FRONTEND_URL and NEXT_PUBLIC_BACKEND_URL are public origins — leave them
+# empty until you expose the release, then set them to that HTTPS host
+# (NEXT_PUBLIC_BACKEND_URL keeps the `/api` suffix). BACKEND_INTERNAL_URL is
+# server-to-server inside the container (NestJS still listens on 3000); do not
+# point it at the chart Service or a public domain.
 env:
-  FRONTEND_URL: "http://localhost:4200"
-  NEXT_PUBLIC_BACKEND_URL: "http://localhost:3000"
-  BACKEND_INTERNAL_URL: "http://backend:3000"
+  FRONTEND_URL: ""
+  NEXT_PUBLIC_BACKEND_URL: ""
+  BACKEND_INTERNAL_URL: "http://localhost:3000"
   UPLOAD_DIRECTORY: ""
   NEXT_PUBLIC_UPLOAD_STATIC_DIRECTORY: ""
   NX_ADD_PLUGINS: "false"

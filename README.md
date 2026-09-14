@@ -5,7 +5,7 @@
 </p>
 
 <h3 align="center">
-  <a href="https://postqueen.ai/agent">🆕 NEW: meet the PostQueen Agent, run your social media from Claude Code, ChatGPT, OpenClaw or Hermes »</a>
+  <a href="https://postqueen.ai/agent">🆕 NEW: meet the PostQueen Agent, run your social media from Claude Code, ChatGPT, OpenClaw, Hermes or Grok Bot »</a>
 </h3>
 
 <br/>
@@ -40,7 +40,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="License: Apache-2.0"></a>
-  <img src="https://img.shields.io/badge/chart-1.1.1-6d28d9" alt="Chart version 1.1.1">
+  <img src="https://img.shields.io/badge/chart-1.1.2-6d28d9" alt="Chart version 1.1.2">
   <img src="https://img.shields.io/badge/app-v3.6.0-7c3aed" alt="App version v3.6.0">
   <img src="https://img.shields.io/badge/Helm-3.0+-0f1689" alt="Helm 3.0+">
 </p>
@@ -87,7 +87,7 @@ Three things worth knowing before your first `helm install`, because each one ha
 
 - **The chart does not bundle Temporal.** PostQueen uses [Temporal](https://temporal.io) for scheduling and publishing: the app reads `TEMPORAL_ADDRESS` (default `localhost:7233`, which fails inside a cluster). Run a Temporal server alongside the release, or point at an existing one, and set `env.TEMPORAL_ADDRESS` to its `host:port`. Without it the UI loads but scheduled publishing will not run.
 - **Production needs a public HTTPS domain.** To connect real social accounts, expose the release through an ingress with TLS on a public domain, because the social networks send their OAuth callbacks there.
-- **Different convention than Docker Compose.** This chart's defaults use in-cluster service URLs and ports 80/5000, while the docker-compose stack publishes on host port 4007. They are two different deployment conventions, so follow this README rather than the compose one.
+- **Different convention than Docker Compose.** This chart's Service is port 80 mapped to container port **5000**. Compose publishes the same image on host port **4007**. Public URLs (`FRONTEND_URL`, `NEXT_PUBLIC_BACKEND_URL`) are empty until you set them; do not copy Compose's `localhost:4007` or the monorepo's `4200`/`3000` ports.
 
 ---
 
@@ -113,7 +113,7 @@ To install the chart with the release name `postqueen`:
 helm install postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app
 ```
 
-This deploys PostQueen with the default configuration, including bundled PostgreSQL and Redis. Before exposing it publicly you should at minimum set a unique `secrets.JWT_SECRET` and the connection strings described in [Configuration](#-configuration).
+This deploys PostQueen with the default configuration, including bundled PostgreSQL and Redis. Before exposing it publicly you should at minimum set a unique `secrets.JWT_SECRET`, the connection strings described in [Configuration](#-configuration), and the public URLs (`env.FRONTEND_URL` and `env.NEXT_PUBLIC_BACKEND_URL`). Those two start empty on purpose — they are the browser/OAuth origins, and `localhost:4200` / `localhost:3000` are the split monorepo ports, not this image.
 
 To upgrade an existing release after changing values or pulling a newer chart:
 
@@ -148,9 +148,9 @@ Both are loaded into the app container via `envFrom`, so every key becomes an en
 
 | Parameter | Description | Default |
 | --- | --- | --- |
-| `env.FRONTEND_URL` | Public URL of the frontend | `http://localhost:4200` |
-| `env.NEXT_PUBLIC_BACKEND_URL` | Public URL of the backend API (baked into the frontend at runtime) | `http://localhost:3000` |
-| `env.BACKEND_INTERNAL_URL` | In-cluster URL the frontend uses to reach the backend | `http://backend:3000` |
+| `env.FRONTEND_URL` | Public URL of the frontend (OAuth redirects, emails). **Set this to your public HTTPS origin before exposing the release.** Empty until then; this chart has no `localhost:4200` frontend. | `""` |
+| `env.NEXT_PUBLIC_BACKEND_URL` | Public URL of the backend API (browser). For the all-in-one image this is the same origin plus `/api` (for example `https://social.example.com/api`). **Set this before exposing.** | `""` |
+| `env.BACKEND_INTERNAL_URL` | Server-to-server URL the Next.js process uses to reach NestJS. In the all-in-one image both run in the same container (backend on **3000**); there is no `backend` Service. Leave this as localhost — do not point it at the chart Service (`80` → container `5000`) or a public domain. | `http://localhost:3000` |
 | `env.UPLOAD_DIRECTORY` | Local filesystem path for uploaded media | `""` |
 | `env.NEXT_PUBLIC_UPLOAD_STATIC_DIRECTORY` | Public path used to serve uploaded media | `""` |
 | `env.NX_ADD_PLUGINS` | Nx plugin flag (leave as-is for most deployments) | `"false"` |
@@ -198,6 +198,7 @@ Create a `custom-values.yaml`:
 env:
   FRONTEND_URL: "https://social.example.com"
   NEXT_PUBLIC_BACKEND_URL: "https://social.example.com/api"
+  BACKEND_INTERNAL_URL: "http://localhost:3000"
 
 secrets:
   JWT_SECRET: "change-me-to-a-long-random-string"
@@ -327,6 +328,10 @@ When the bundled subcharts are enabled, PostgreSQL and Redis each request a [Per
 
 ## ⬆️ Upgrading
 
+### To 1.1.2
+
+Default `env.FRONTEND_URL` and `env.NEXT_PUBLIC_BACKEND_URL` are empty. Set them to your public origin (and `/api`) before exposing the release. Default `env.BACKEND_INTERNAL_URL` is `http://localhost:3000` (NestJS inside the all-in-one container), not `http://backend:3000`. Existing releases that already set these keys are unchanged.
+
 ### To 1.1.1
 
 `appVersion` is `v3.6.0`, the current app release. It was `3.0.4`, which named no published image (app tags carry a `v`), so leaving `image.tag` empty pulled a tag that does not exist. The default `image.tag` is still `latest`; nothing changes for installs that keep it.
@@ -347,17 +352,19 @@ If you do not need Kubernetes, the same stack runs with a single command via [po
 
 ---
 
-## 🦞 Meet her open agents: OpenClaw &amp; Hermes
+## 🦞 Meet her bots: OpenClaw, Hermes &amp; Grok Bot
 
 Two open-source agents already speak PostQueen natively. **OpenClaw** lives on your machine and turns any chat app into her front door. **Hermes** does the same, then goes further: hand it a single brief and it plans, writes and schedules your entire week on its own. Both drive the same `postqueen` CLI, so everything they do shows up on your calendar.
+
+**Grok Bot** is the cloud agent, not grok.com chat: tell it the PostQueen MCP URL in the Bot conversation. A custom connector at grok.com/connectors does not install her there.
 
 <p align="center">
   <img src=".github/assets/open-agents.svg" width="660" alt="OpenClaw and Hermes running PostQueen: chat apps feed OpenClaw, a one-line brief feeds Hermes, both drive the postqueen CLI and posts land on the calendar" />
 </p>
 
-<a href="https://postqueen.ai/openclaw"><img src=".github/assets/spotlight-openclaw.svg" width="410" alt="OpenClaw: runs on your machine and takes her messages from WhatsApp, Telegram, Slack or Discord. Opens the set-up guide." /></a> <a href="https://postqueen.ai/hermes-agent"><img src=".github/assets/spotlight-hermes.svg" width="410" alt="Hermes: the self-improving autonomous agent that turns one brief into a planned, verified week. Opens the set-up guide." /></a>
+<a href="https://postqueen.ai/openclaw"><img src=".github/assets/spotlight-openclaw.svg" width="410" alt="OpenClaw: runs on your machine and takes her messages from WhatsApp, Telegram, Slack or Discord. Opens the set-up guide." /></a> <a href="https://postqueen.ai/hermes-agent"><img src=".github/assets/spotlight-hermes.svg" width="410" alt="Hermes: the self-improving autonomous agent that turns one brief into a planned, verified week. Opens the set-up guide." /></a> <a href="https://postqueen.ai/grok-bot"><img src=".github/assets/spotlight-grok-bot.svg" width="410" alt="Grok Bot: the cloud agent. Tell it the MCP URL in chat. Not grok.com/connectors. Opens the set-up guide." /></a>
 
-**Any other agent works too.** If it can run a CLI command or call MCP, it can run your socials. [Agent guide »](https://postqueen.ai/agent)
+**Any other agent works too.** If it can run a CLI command or call MCP, it can run your socials. [Agents overview »](https://docs.postqueen.ai/agents/overview)
 
 <br/>
 
