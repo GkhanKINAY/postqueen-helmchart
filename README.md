@@ -109,7 +109,7 @@ Every key under `env` and `secrets` becomes an environment variable in the app, 
 | `secrets.DATABASE_URL` | `""` | PostgreSQL connection string |
 | `secrets.REDIS_URL` | `""` | Redis connection string |
 | `image.repository` | `ghcr.io/gkhankinay/postqueen-app` | App image |
-| `image.tag` | `latest` | App version. Pin one of the app's [tags](https://github.com/GkhanKINAY/postqueen-app/tags), such as `v3.6.76`. |
+| `image.tag` | `latest` | App version. Pin one of the app's [releases](https://github.com/GkhanKINAY/postqueen-app/releases), such as `v3.6.84`. |
 | `postgresql.enabled` | `true` | Deploy the bundled PostgreSQL |
 | `postgresql.image.repository` | `bitnamilegacy/postgresql` | Bundled PostgreSQL image, tag `16.4.0-debian-12-r7` |
 | `redis.enabled` | `true` | Deploy the bundled Redis |
