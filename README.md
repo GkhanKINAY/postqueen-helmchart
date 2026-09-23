@@ -1,23 +1,38 @@
-# PostQueen Helm chart
-
-Helm chart for self-hosting PostQueen on Kubernetes. It needs a Temporal server; PostgreSQL and Redis can run inside the release or come from your own services.
-
-<p>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="License: Apache-2.0"></a>
-  <a href="charts/postqueen/Chart.yaml"><img src="https://img.shields.io/badge/chart-1.1.3-0f1689?logo=helm&logoColor=white" alt="Chart version 1.1.3"></a>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banner-dark.png">
+    <img src=".github/assets/banner-light.png" width="100%" alt="PostQueen Helm chart. Run PostQueen on Kubernetes, with PostgreSQL and Redis inside the release or your own, pointed at a Temporal server.">
+  </picture>
 </p>
 
 <p align="center">
-  <img src=".github/assets/calendar.svg" width="660" alt="An illustration of the PostQueen calendar: a week of scheduled posts across several channels" />
+  Helm chart for self-hosting PostQueen on Kubernetes. It needs a Temporal server; PostgreSQL and Redis can run inside the release or come from your own services.
+</p>
+
+<p align="center">
+  <a href="https://postqueen.ai"><b>Website</b></a> ·
+  <a href="https://docs.postqueen.ai/installation/kubernetes-helm"><b>Docs</b></a> ·
+  <a href="https://postqueen.ai/pricing"><b>Pricing</b></a> ·
+  <a href="https://github.com/GkhanKINAY/postqueen-helmchart/pkgs/container/postqueen-helmchart%2Fcharts%2Fpostqueen-app"><b>Chart package</b></a>
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-7C3AED?labelColor=15131C" alt="License: Apache-2.0"></a>
+  <a href="charts/postqueen/Chart.yaml"><img src="https://img.shields.io/badge/chart-1.1.3-7C3AED?labelColor=15131C&logo=helm&logoColor=white" alt="Chart version 1.1.3"></a>
 </p>
 
 ## What it does
 
-- Deploys the all-in-one PostQueen image, `ghcr.io/gkhankinay/postqueen-app`: the web app and the API in one pod, on container port 5000 behind a Service on port 80.
+- Deploys the all-in-one PostQueen image, `ghcr.io/gkhankinay/postqueen-app`: the web app, the API and the publishing workers in one pod, on container port 5000 behind a Service on port 80.
 - Renders `env` into a ConfigMap and `secrets` into a Secret, and loads both into the app as environment variables.
 - Deploys the Bitnami PostgreSQL and Redis subcharts by default, with their images from `bitnamilegacy/` on Docker Hub. Turn either off to use your own.
 - Adds an Ingress when you enable it.
 - Does not include Temporal. You point the app at your own Temporal server.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/architecture-dark.png">
+  <img src=".github/assets/architecture-light.png" width="100%" alt="Diagram of the Helm release. The browser reaches an optional Ingress, then the Service on port 80, then the postqueen-app pod on port 5000, which holds the web app, the API, the workers and its settings. The pod uses the optional PostgreSQL and Redis subcharts or your own, and reaches a Temporal server outside the chart through env.TEMPORAL_ADDRESS.">
+</picture>
 
 [PostQueen](https://github.com/GkhanKINAY/postqueen-app) is a social media scheduler with an AI copilot that posts to 30+ networks. It is open source under AGPL-3.0, and this chart runs it on your own cluster.
 
@@ -25,6 +40,7 @@ Helm chart for self-hosting PostQueen on Kubernetes. It needs a Temporal server;
 
 - **Temporal is required.** PostQueen schedules and publishes through [Temporal](https://temporal.io). Set `env.TEMPORAL_ADDRESS` to your Temporal server's `host:port`. Without it, the app falls back to `localhost:7233`, the UI loads, and scheduled posts never go out.
 - **Real accounts need a public HTTPS domain.** Social networks send their sign-in callbacks there, so expose the release through an Ingress with TLS.
+- **Uploads need a location.** The chart leaves `env.UPLOAD_DIRECTORY` empty, and with the default local storage the app does not start without it. The quick start below sets it to `/uploads`, where the chart mounts a volume.
 - **Ports differ from Docker Compose.** The Service is port 80 to container port 5000. Leave `env.FRONTEND_URL` and `env.NEXT_PUBLIC_BACKEND_URL` empty until you have that domain, then set them to it. Do not copy Compose's `localhost:4007`.
 
 ## Quick start
@@ -38,6 +54,9 @@ env:
   TEMPORAL_ADDRESS: "temporal-frontend.temporal.svc:7233"   # your Temporal server
   FRONTEND_URL: "https://social.example.com"
   NEXT_PUBLIC_BACKEND_URL: "https://social.example.com/api"
+  STORAGE_PROVIDER: "local"
+  UPLOAD_DIRECTORY: "/uploads"
+  NEXT_PUBLIC_UPLOAD_STATIC_DIRECTORY: "uploads"
 secrets:
   JWT_SECRET: "a-long-random-string"
   ENCRYPTION_KEY: "another-long-random-string"
@@ -64,6 +83,9 @@ Every key under `env` and `secrets` becomes an environment variable in the app, 
 | `env.TEMPORAL_NAMESPACE` | `default` | Temporal namespace |
 | `env.FRONTEND_URL` | `""` | Public address of the app |
 | `env.NEXT_PUBLIC_BACKEND_URL` | `""` | Public API address, the same host plus `/api` |
+| `env.STORAGE_PROVIDER` | not set, so `local` | Where uploaded media is kept: `local` or `cloudflare` |
+| `env.UPLOAD_DIRECTORY` | `""` | Folder for uploads with local storage. Required for `local`; use `/uploads`. |
+| `env.NEXT_PUBLIC_UPLOAD_STATIC_DIRECTORY` | `""` | Path the web app serves uploads from; use `uploads` |
 | `env.BACKEND_INTERNAL_URL` | `http://localhost:3000` | How the web app reaches the API inside the same container. Leave it as it is. |
 | `secrets.JWT_SECRET` | `""` | Signs login sessions. Set a long random value. |
 | `secrets.ENCRYPTION_KEY` | not set | Encrypts stored secrets, such as the app passwords and keys typed in when a channel is connected. Falls back to `JWT_SECRET` when unset. |
@@ -76,13 +98,13 @@ Every key under `env` and `secrets` becomes an environment variable in the app, 
 | `redis.enabled` | `true` | Deploy the bundled Redis |
 | `redis.image.repository` | `bitnamilegacy/redis` | Bundled Redis image, tag `7.4.0-debian-12-r2` |
 | `ingress.enabled` | `false` | Create an Ingress; set `ingress.hosts` and `ingress.tls` with it |
-| `extraVolumes`, `extraVolumeMounts` | `[]` | Uploads go to an `emptyDir` at `/uploads` unless you mount a volume there |
+| `extraVolumes`, `extraVolumeMounts` | `[]` | The chart mounts an `emptyDir` at `/uploads` unless you mount your own volume there |
 
 [`values.yaml`](charts/postqueen/values.yaml) lists every value with its default.
 
 **Your own databases.** Set `postgresql.enabled: false` or `redis.enabled: false`, and point `secrets.DATABASE_URL` or `secrets.REDIS_URL` at your service.
 
-**Uploads.** The default `emptyDir` is lost when the pod restarts. Mount a persistent volume at `/uploads`, or store media in Cloudflare R2 with the `secrets.CLOUDFLARE_*` keys.
+**Uploads.** The default `emptyDir` is lost when the pod restarts. Mount a persistent volume at `/uploads`, or store media in Cloudflare R2: set `env.STORAGE_PROVIDER` to `cloudflare` and add the `CLOUDFLARE_*` keys from the [configuration reference](https://docs.postqueen.ai/configuration/reference).
 
 ### Upgrading
 
@@ -103,7 +125,7 @@ Prefer a single host? [postqueen-docker-compose](https://github.com/GkhanKINAY/p
 ## Privacy and security
 
 - Channels connect through each network's official OAuth sign-in where the network offers one. On your own cluster, that is the developer app you create for each network.
-- Some networks, such as Bluesky, Lemmy, WordPress and Nostr, need an app password or a key that you paste in.
+- Some networks, such as Bluesky, Lemmy, WordPress and Nostr, need an app password, an account password or a key that you paste in.
 - Your instance stores these credentials in its database so it can post for you, and replaces them when you remove the channel.
 - For the hosted service, read the [privacy policy](https://postqueen.ai/privacy-policy), or [delete your account](https://postqueen.ai/delete-my-account).
 
