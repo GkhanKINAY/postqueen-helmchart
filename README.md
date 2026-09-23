@@ -152,7 +152,7 @@ helm upgrade postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postq
 
 `helm uninstall postqueen` removes the release. The volumes of the bundled PostgreSQL and Redis stay until you delete their PVCs.
 
-Prefer a single host? [postqueen-docker-compose](https://github.com/GkhanKINAY/postqueen-docker-compose) runs the same image with Temporal included. Prefer not to run a server at all? The hosted service at [postqueen.ai](https://postqueen.ai) does it for you: [start a 7-day trial, $0 due today](https://postqueen.ai/pricing).
+Prefer a single host? [postqueen-docker-compose](https://github.com/GkhanKINAY/postqueen-docker-compose) runs the same image with Temporal included. Prefer not to run a server at all? The hosted service at [postqueen.ai](https://postqueen.ai) does it for you: [start a 7-day trial, $0 due today](https://app.postqueen.ai/auth?utm_source=github&utm_medium=readme&utm_campaign=postqueen-helmchart&utm_content=quick-start).
 
 ## Privacy and security
 
