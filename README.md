@@ -17,8 +17,8 @@
 </p>
 
 <p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-7C3AED?labelColor=15131C" alt="License: Apache-2.0"></a>
-  <a href="charts/postqueen/Chart.yaml"><img src="https://img.shields.io/badge/chart-1.1.6-7C3AED?labelColor=15131C&logo=helm&logoColor=white" alt="Chart version 1.1.6"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-2563EB?labelColor=15131C" alt="License: Apache-2.0"></a>
+  <a href="charts/postqueen/Chart.yaml"><img src="https://img.shields.io/badge/chart-1.1.6-0EA5E9?labelColor=15131C&logo=helm&logoColor=white" alt="Chart version 1.1.6"></a>
 </p>
 
 <p align="center">
