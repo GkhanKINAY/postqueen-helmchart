@@ -21,6 +21,19 @@
   <a href="charts/postqueen/Chart.yaml"><img src="https://img.shields.io/badge/chart-1.1.6-7C3AED?labelColor=15131C&logo=helm&logoColor=white" alt="Chart version 1.1.6"></a>
 </p>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/NEW-7C3AED?style=flat-square" height="18" alt="New">&nbsp; <b>Connect Claude, ChatGPT, Grok Bot or any AI agent to your socials.</b> <a href="https://docs.postqueen.ai/agents/overview">See every agent →</a>
+</p>
+
+<p align="center">
+  <a href="https://docs.postqueen.ai/channels/overview"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/GkhanKINAY/postqueen-app/main/.github/assets/showcase/channels-row-dark.png"><img src="https://raw.githubusercontent.com/GkhanKINAY/postqueen-app/main/.github/assets/showcase/channels-row-light.png" width="100%" alt="Posts to 30+ networks: Instagram, TikTok, YouTube, X, LinkedIn, Facebook, Threads, Pinterest, Reddit, Bluesky, Mastodon, Discord, Telegram, Slack, Twitch, Kick, Google Business Profile, Dribbble, Tumblr, WordPress, DEV, Hashnode, VK, MeWe, Lemmy, Nostr, Farcaster, Moltbook, Listmonk, Whop and Skool"></picture></a>
+</p>
+
+<p align="center">
+  <a href="https://docs.postqueen.ai/agents/overview"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/GkhanKINAY/postqueen-app/main/.github/assets/showcase/agents-row-dark.png"><img src="https://raw.githubusercontent.com/GkhanKINAY/postqueen-app/main/.github/assets/showcase/agents-row-light.png" width="100%" alt="Works with the AI agent you already use: Claude, ChatGPT, Grok Bot (new), Grok, Perplexity, Muse (new), Claude Code, Codex, Cursor, Gemini CLI, VS Code, Devin Desktop, Zed, OpenClaw, Hermes, NanoClaw, Paperclip and any MCP app"></picture></a>
+</p>
+
+
 ## What it does
 
 - Deploys the all-in-one PostQueen image, `ghcr.io/gkhankinay/postqueen-app`: the web app, the API and the publishing workers in one pod, on container port 5000 behind a Service on port 80.
