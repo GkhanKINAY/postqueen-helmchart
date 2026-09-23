@@ -65,6 +65,12 @@ affinity: {}
 # PostgreSQL configuration
 postgresql:
   enabled: true
+  # Docker Hub no longer serves the bitnami/postgresql tag this subchart pins.
+  # The same tag is still published under bitnamilegacy/.
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/postgresql
+    tag: 16.4.0-debian-12-r7
   auth:
     username: postqueen
     password: postqueen-password
@@ -76,6 +82,12 @@ postgresql:
 # Redis configuration
 redis:
   enabled: true
+  # Docker Hub no longer serves the bitnami/redis tag this subchart pins.
+  # The same tag is still published under bitnamilegacy/.
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/redis
+    tag: 7.4.0-debian-12-r2
   auth:
     password: postqueen-redis-password
   master:
