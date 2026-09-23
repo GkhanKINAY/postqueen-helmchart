@@ -34,9 +34,21 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/GkhanKINAY/postqueen-helmchart/stargazers"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/GkhanKINAY/postqueen-app/main/.github/assets/showcase/star-dark.png"><img src="https://raw.githubusercontent.com/GkhanKINAY/postqueen-app/main/.github/assets/showcase/star-light.png" width="380" alt="Like PostQueen? Star the repo. It helps others find it."></picture></a>
+</p>
+
+<p align="center">
   <a href="https://docs.postqueen.ai/agents/overview"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/GkhanKINAY/postqueen-app/main/.github/assets/showcase/works-dark.png"><img src="https://raw.githubusercontent.com/GkhanKINAY/postqueen-app/main/.github/assets/showcase/works-light.png" width="100%" alt="Use the agent you already have: Claude, ChatGPT, Grok Bot (new), Grok, Perplexity, Muse (new), Claude Code, Codex, Cursor, Gemini CLI, VS Code, Devin Desktop, Zed, OpenClaw, Hermes, NanoClaw, Paperclip and any MCP app. Posts to 30+ networks."></picture></a>
 </p>
 
+
+
+<p align="center"><b>Run it on your cluster, or skip the servers?</b> PostQueen Cloud is the same app, run for you, so you can post today instead of waiting weeks for each network to approve an app of your own.</p>
+
+<p align="center">
+  <a href="https://app.postqueen.ai/auth?utm_source=github&utm_medium=readme&utm_campaign=postqueen-helmchart&utm_content=choose-cloud"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/GkhanKINAY/postqueen-app/main/.github/assets/showcase/choose-cloud-dark.png"><img src="https://raw.githubusercontent.com/GkhanKINAY/postqueen-app/main/.github/assets/showcase/choose-cloud-light.png" width="49%" alt="PostQueen Cloud, recommended: post today, not after the API reviews. PostQueen's own network apps, the hosted MCP server, AI included, updates and support handled. Start 7-day trial for $0, $0 due today."></picture></a>
+  <a href="#quick-start"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/GkhanKINAY/postqueen-app/main/.github/assets/showcase/choose-self-dark.png"><img src="https://raw.githubusercontent.com/GkhanKINAY/postqueen-app/main/.github/assets/showcase/choose-self-light.png" width="49%" alt="Self-hosted, AGPL-3.0: run it on your own servers with PostgreSQL, Redis and Temporal, create a developer app on every network and wait for its review, bring your own AI keys, and handle updates yourself."></picture></a>
+</p>
 
 ## What it does
 
