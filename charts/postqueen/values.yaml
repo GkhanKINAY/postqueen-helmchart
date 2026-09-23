@@ -108,8 +108,12 @@ env:
   FRONTEND_URL: ""
   NEXT_PUBLIC_BACKEND_URL: ""
   BACKEND_INTERNAL_URL: "http://localhost:3000"
-  UPLOAD_DIRECTORY: ""
-  NEXT_PUBLIC_UPLOAD_STATIC_DIRECTORY: ""
+  # Local storage on the uploads volume, the same defaults as the Docker
+  # Compose stack. For Cloudflare R2 set STORAGE_PROVIDER to "cloudflare" and
+  # the CLOUDFLARE_* values instead.
+  STORAGE_PROVIDER: "local"
+  UPLOAD_DIRECTORY: "/uploads"
+  NEXT_PUBLIC_UPLOAD_STATIC_DIRECTORY: "uploads"
   NX_ADD_PLUGINS: "false"
   IS_GENERAL: "true"
   # Temporal powers scheduling and publishing. This chart does NOT bundle a
