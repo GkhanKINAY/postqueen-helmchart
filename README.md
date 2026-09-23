@@ -18,7 +18,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-7C3AED?labelColor=15131C" alt="License: Apache-2.0"></a>
-  <a href="charts/postqueen/Chart.yaml"><img src="https://img.shields.io/badge/chart-1.1.5-7C3AED?labelColor=15131C&logo=helm&logoColor=white" alt="Chart version 1.1.5"></a>
+  <a href="charts/postqueen/Chart.yaml"><img src="https://img.shields.io/badge/chart-1.1.6-7C3AED?labelColor=15131C&logo=helm&logoColor=white" alt="Chart version 1.1.6"></a>
 </p>
 
 ## What it does
@@ -68,7 +68,7 @@ Then install it:
 
 ```bash
 helm install postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app \
-  --version 1.1.5 -f my-values.yaml
+  --version 1.1.6 -f my-values.yaml
 ```
 
 The app always reads `secrets.DATABASE_URL` and `secrets.REDIS_URL`; the chart does not derive them from the subcharts. The values above match a release named `postqueen` with the bundled databases and their default passwords. Change those passwords in `postgresql.auth` and `redis.auth` for a real install.
@@ -110,10 +110,11 @@ Every key under `env` and `secrets` becomes an environment variable in the app, 
 
 ```bash
 helm upgrade postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app \
-  --version 1.1.5 -f my-values.yaml
+  --version 1.1.6 -f my-values.yaml
 ```
 
-- **1.1.5:** `appVersion` names the current app release, `v3.6.81`.
+- **1.1.6:** `appVersion` names the current app release, `v3.6.84`.
+- **1.1.5:** `appVersion` named `v3.6.81`.
 - **1.1.4:** local uploads work out of the box: `STORAGE_PROVIDER`, `UPLOAD_DIRECTORY` and `NEXT_PUBLIC_UPLOAD_STATIC_DIRECTORY` now default to the same values as the Docker Compose stack (`local`, `/uploads`, `uploads`), so the app no longer stops at start when they are left unset.
 - **1.1.3:** the bundled PostgreSQL and Redis images come from `bitnamilegacy/` with the same tags, because Docker Hub no longer serves them under `bitnami/`. Releases that set their own `postgresql.image` or `redis.image` are not affected.
 - **1.1.2:** `env.FRONTEND_URL` and `env.NEXT_PUBLIC_BACKEND_URL` default to empty, and `env.BACKEND_INTERNAL_URL` to `http://localhost:3000`. Releases that already set these keys keep their values.
