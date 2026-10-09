@@ -127,7 +127,7 @@ Every key under `env` and `secrets` becomes an environment variable in the app, 
 | `secrets.DATABASE_URL` | `""` | PostgreSQL connection string |
 | `secrets.REDIS_URL` | `""` | Redis connection string |
 | `image.repository` | `ghcr.io/gkhankinay/postqueen-app` | App image |
-| `image.tag` | `latest` | App version. Pin one of the app's [releases](https://github.com/GkhanKINAY/postqueen-app/releases), such as `v3.6.121`. |
+| `image.tag` | `latest` | App version. Pin one of the app's [releases](https://github.com/GkhanKINAY/postqueen-app/releases), such as `v3.6.122`. |
 | `postgresql.enabled` | `true` | Deploy the bundled PostgreSQL |
 | `postgresql.image.repository` | `bitnamilegacy/postgresql` | Bundled PostgreSQL image, tag `16.4.0-debian-12-r7` |
 | `redis.enabled` | `true` | Deploy the bundled Redis |
@@ -148,7 +148,7 @@ helm upgrade postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postq
   --version 1.1.7 -f my-values.yaml
 ```
 
-- **1.1.7:** `appVersion` names the current app release, `v3.6.121`. Two values are new, both set to what the app already did: `env.PRISMA_MIGRATE: ""` (keep `db push`) and `env.ENCRYPT_INTEGRATION_TOKENS: "true"`. Releases that set either key keep their value. **Read [Upgrading to app v3.6.121](#upgrading-to-app-v36121) first if your release still uses `db push`.**
+- **1.1.7:** `appVersion` names the current app release, `v3.6.122`. Two values are new, both set to what the app already did: `env.PRISMA_MIGRATE: ""` (keep `db push`) and `env.ENCRYPT_INTEGRATION_TOKENS: "true"`. Releases that set either key keep their value. If a pod is restarting on app `v3.6.121`, see [db push and app v3.6.121](#db-push-and-app-v36121).
 - **1.1.6:** `appVersion` named `v3.6.84`.
 - **1.1.5:** `appVersion` named `v3.6.81`.
 - **1.1.4:** local uploads work out of the box: `STORAGE_PROVIDER`, `UPLOAD_DIRECTORY` and `NEXT_PUBLIC_UPLOAD_STATIC_DIRECTORY` now default to the same values as the Docker Compose stack (`local`, `/uploads`, `uploads`), so the app no longer stops at start when they are left unset.
@@ -157,23 +157,23 @@ helm upgrade postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postq
 - **1.1.1:** `appVersion` names a published app tag, `v3.6.0`. `image.tag` still defaults to `latest`.
 - **1.1.0:** the chart moved to `oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app`, and the bundled database credentials were renamed to `postqueen*`. From 1.0.x, install under the release name `postqueen`, or set `postgresql.auth.*` and `redis.auth.*` to keep your old credentials.
 
-#### Upgrading to app v3.6.121
+#### db push and app v3.6.121
 
-`image.tag` defaults to `latest`, which is `v3.6.121` now, so this applies as soon as your pod pulls the image again, whichever chart version you run.
+Releases on `db push` upgrade normally: the app applies the schema at start, as before.
 
-From `v3.6.121`, `db push` no longer accepts changes that Prisma flags as possible data loss: it stops the start instead. A database last updated by an app older than `v3.6.107` (chart 1.1.6 named `v3.6.84`) has two such changes waiting: the top plan's enum value `AGENCY` is renamed to `ULTIMATE` (from `v3.6.89`), and a unique index is added to the credits table (from `v3.6.107`). On `db push`, the pod then restarts in a loop, with this in its log:
+App `v3.6.121` is the exception. Its `db push` stopped at start on a database last updated by an app older than `v3.6.107`, which includes chart 1.1.6's `v3.6.84`, with this in the log:
 
 ```
 Error: Use the --accept-data-loss flag to ignore the data loss warnings like prisma db push --accept-data-loss
 ```
 
-Nothing is changed in the database when this happens. The fix is to move the release to migrations, which apply both changes without losing data: the enum value is renamed in place, so a subscription on the top plan keeps it. Follow [Switching to migrations](#switching-to-migrations).
+The failed start changes nothing in the database. `v3.6.122` fixes it. If your pod is restarting on `v3.6.121`, upgrade with `--set image.tag=v3.6.122` (or pin it in `my-values.yaml`), and it starts. Staying on `latest` is not enough with the default `pullPolicy: IfNotPresent`: a node that already holds `latest` keeps starting the `v3.6.121` it has.
 
-A release that already started an app from `v3.6.107` to `v3.6.120` on `db push` has both changes in place, and `v3.6.121` starts on `db push` as before. Switching to migrations is still recommended. A release with `PRISMA_MIGRATE` already set needs nothing.
+Two of the changes waiting for such a database are the top plan's enum value `AGENCY` becoming `ULTIMATE` and a unique index on the credits table. `db push` can only rebuild that enum, and the rebuild fails if a subscription still holds `AGENCY`. Migrations rename it in place, so if any workspace is on the top plan, switch to migrations first.
 
 #### Switching to migrations
 
-`PRISMA_MIGRATE: "true"` runs `prisma migrate deploy`, which refuses a database that has tables but no migration history (`Error: P3005`). A database built by `db push` therefore needs its history recorded once: mark every migration that ships in the image it was last pushed with as applied. The app's `.env.example` mentions only `prisma migrate resolve --applied 0_init`; on a `db push` database that is not enough, because the next migration then fails with `already exists`.
+`PRISMA_MIGRATE: "true"` runs `prisma migrate deploy`, which refuses a database that has tables but no migration history (`Error: P3005`). A database built by `db push` therefore needs its history recorded once: mark every migration that ships in the image it was last pushed with as applied. Marking only `0_init` is not enough: the next migration then fails with `already exists`.
 
 1. **While the pod still runs the image it was last pushed with**, before upgrading, record the migrations that image contains:
 
@@ -194,10 +194,6 @@ A release that already started an app from `v3.6.107` to `v3.6.120` on `db push`
    ```
 
    Then keep `PRISMA_MIGRATE: "true"` in `my-values.yaml`. The log shows the newer migrations being applied, then `All migrations have been successfully applied.`
-
-**If the pod is already restarting on `v3.6.121`**, put back the tag it ran before with `--set image.tag=<that tag>`, such as `v3.6.84` if you pinned the chart's `appVersion`. The failed start changed nothing, so the old image starts again. Then follow the two steps above.
-
-If you cannot tell which version it ran, because the release used the default `latest`, set `image.tag=v3.6.120` instead. It is the last image whose `db push` still accepts these changes, so it brings the schema up to `v3.6.120`; then run step 1 in that pod and continue with step 2. It stops with an error, and changes nothing, if a subscription still holds `AGENCY`. In that case you need the version the release ran before.
 
 #### Rolling back
 
