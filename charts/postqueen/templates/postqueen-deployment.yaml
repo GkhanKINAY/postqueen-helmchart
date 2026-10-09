@@ -13,10 +13,14 @@ spec:
       {{- include "postqueen.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
+        # Roll the pod when env or secrets change; otherwise only the
+        # ConfigMap/Secret would be rewritten and the app would keep the old values.
+        checksum/config: {{ toYaml .Values.env | sha256sum }}
+        checksum/secret: {{ toYaml .Values.secrets | sha256sum }}
+        {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- end }}
       labels:
         {{- include "postqueen.selectorLabels" . | nindent 8 }}
     spec:
