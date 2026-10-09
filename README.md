@@ -18,7 +18,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-2563EB?labelColor=15131C" alt="License: Apache-2.0"></a>
-  <a href="charts/postqueen/Chart.yaml"><img src="https://img.shields.io/badge/chart-1.1.6-0EA5E9?labelColor=15131C&logo=helm&logoColor=white" alt="Chart version 1.1.6"></a>
+  <a href="charts/postqueen/Chart.yaml"><img src="https://img.shields.io/badge/chart-1.1.7-0EA5E9?labelColor=15131C&logo=helm&logoColor=white" alt="Chart version 1.1.7"></a>
 </p>
 
 <p align="center">
@@ -69,7 +69,7 @@
 
 - **Temporal is required.** PostQueen schedules and publishes through [Temporal](https://temporal.io). Set `env.TEMPORAL_ADDRESS` to your Temporal server's `host:port`. Without it, the app falls back to `localhost:7233`, the UI loads, and scheduled posts never go out.
 - **Real accounts need a public HTTPS domain.** Social networks send their sign-in callbacks there, so expose the release through an Ingress with TLS.
-- **Uploads need a location.** The chart leaves `env.UPLOAD_DIRECTORY` empty, and with the default local storage the app does not start without it. The quick start below sets it to `/uploads`, where the chart mounts a volume.
+- **Uploads need a location.** The chart sets `env.UPLOAD_DIRECTORY` to `/uploads`, where it mounts a volume. With local storage the app does not start without it.
 - **Ports differ from Docker Compose.** The Service is port 80 to container port 5000. Leave `env.FRONTEND_URL` and `env.NEXT_PUBLIC_BACKEND_URL` empty until you have that domain, then set them to it. Do not copy Compose's `localhost:4007`.
 
 ## Quick start
@@ -86,9 +86,10 @@ env:
   STORAGE_PROVIDER: "local"
   UPLOAD_DIRECTORY: "/uploads"
   NEXT_PUBLIC_UPLOAD_STATIC_DIRECTORY: "uploads"
+  PRISMA_MIGRATE: "true"   # new installs: apply the schema with migrations
 secrets:
   JWT_SECRET: "a-long-random-string"
-  ENCRYPTION_KEY: "another-long-random-string"
+  ENCRYPTION_KEY: "another-long-random-string"   # keep a copy: losing it disconnects every channel
   DATABASE_URL: "postgresql://postqueen:postqueen-password@postqueen-postgresql:5432/postqueen"
   REDIS_URL: "redis://:postqueen-redis-password@postqueen-redis-master:6379"
 ```
@@ -97,8 +98,10 @@ Then install it:
 
 ```bash
 helm install postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app \
-  --version 1.1.6 -f my-values.yaml
+  --version 1.1.7 -f my-values.yaml
 ```
+
+`PRISMA_MIGRATE: "true"` is for a new, empty database. On a release that already has data, leave it out until you have followed [Switching to migrations](#switching-to-migrations).
 
 The app always reads `secrets.DATABASE_URL` and `secrets.REDIS_URL`; the chart does not derive them from the subcharts. The values above match a release named `postqueen` with the bundled databases and their default passwords. Change those passwords in `postgresql.auth` and `redis.auth` for a real install.
 
@@ -112,16 +115,19 @@ Every key under `env` and `secrets` becomes an environment variable in the app, 
 | `env.TEMPORAL_NAMESPACE` | `default` | Temporal namespace |
 | `env.FRONTEND_URL` | `""` | Public address of the app |
 | `env.NEXT_PUBLIC_BACKEND_URL` | `""` | Public API address, the same host plus `/api` |
-| `env.STORAGE_PROVIDER` | not set, so `local` | Where uploaded media is kept: `local` or `cloudflare` |
-| `env.UPLOAD_DIRECTORY` | `""` | Folder for uploads with local storage. Required for `local`; use `/uploads`. |
-| `env.NEXT_PUBLIC_UPLOAD_STATIC_DIRECTORY` | `""` | Path the web app serves uploads from; use `uploads` |
+| `env.STORAGE_PROVIDER` | `local` | Where uploaded media is kept: `local` or `cloudflare` |
+| `env.UPLOAD_DIRECTORY` | `/uploads` | Folder for uploads with local storage. Required for `local`. |
+| `env.NEXT_PUBLIC_UPLOAD_STATIC_DIRECTORY` | `uploads` | Path the web app serves uploads from |
 | `env.BACKEND_INTERNAL_URL` | `http://localhost:3000` | How the web app reaches the API inside the same container. Leave it as it is. |
 | `secrets.JWT_SECRET` | `""` | Signs login sessions. Set a long random value. |
-| `secrets.ENCRYPTION_KEY` | not set | Encrypts stored secrets, such as the app passwords and keys typed in when a channel is connected. Falls back to `JWT_SECRET` when unset. |
+| `env.PRISMA_MIGRATE` | `""`, so `db push` | How the schema is applied at start. `"true"` runs `prisma migrate deploy` and is recommended. A database built by `db push` needs the one-time baseline in [Switching to migrations](#switching-to-migrations) first. |
+| `env.ENCRYPT_INTEGRATION_TOKENS` | `"true"` | Keeps channel OAuth tokens encrypted in the database, the app's default. Set `"false"` only to roll back below `v3.6.102`; see [Rolling back](#rolling-back). |
+| `secrets.ENCRYPTION_KEY` | not set | Encrypts channel OAuth tokens and other stored credentials, such as the app passwords and keys typed in when a channel is connected. Falls back to `JWT_SECRET` when unset. Give it its own long random value and keep a copy: losing it disconnects every channel. |
+| `secrets.PREVIOUS_ENCRYPTION_KEY` | not set | The old key after you change `ENCRYPTION_KEY`, or after you change `JWT_SECRET` on an install that never set `ENCRYPTION_KEY`. Leave it set: some tokens are only re-encrypted when they are next written. |
 | `secrets.DATABASE_URL` | `""` | PostgreSQL connection string |
 | `secrets.REDIS_URL` | `""` | Redis connection string |
 | `image.repository` | `ghcr.io/gkhankinay/postqueen-app` | App image |
-| `image.tag` | `latest` | App version. Pin one of the app's [releases](https://github.com/GkhanKINAY/postqueen-app/releases), such as `v3.6.84`. |
+| `image.tag` | `latest` | App version. Pin one of the app's [releases](https://github.com/GkhanKINAY/postqueen-app/releases), such as `v3.6.121`. |
 | `postgresql.enabled` | `true` | Deploy the bundled PostgreSQL |
 | `postgresql.image.repository` | `bitnamilegacy/postgresql` | Bundled PostgreSQL image, tag `16.4.0-debian-12-r7` |
 | `redis.enabled` | `true` | Deploy the bundled Redis |
@@ -139,16 +145,69 @@ Every key under `env` and `secrets` becomes an environment variable in the app, 
 
 ```bash
 helm upgrade postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app \
-  --version 1.1.6 -f my-values.yaml
+  --version 1.1.7 -f my-values.yaml
 ```
 
-- **1.1.6:** `appVersion` names the current app release, `v3.6.84`.
+- **1.1.7:** `appVersion` names the current app release, `v3.6.121`. Two values are new, both set to what the app already did: `env.PRISMA_MIGRATE: ""` (keep `db push`) and `env.ENCRYPT_INTEGRATION_TOKENS: "true"`. Releases that set either key keep their value. **Read [Upgrading to app v3.6.121](#upgrading-to-app-v36121) first if your release still uses `db push`.**
+- **1.1.6:** `appVersion` named `v3.6.84`.
 - **1.1.5:** `appVersion` named `v3.6.81`.
 - **1.1.4:** local uploads work out of the box: `STORAGE_PROVIDER`, `UPLOAD_DIRECTORY` and `NEXT_PUBLIC_UPLOAD_STATIC_DIRECTORY` now default to the same values as the Docker Compose stack (`local`, `/uploads`, `uploads`), so the app no longer stops at start when they are left unset.
 - **1.1.3:** the bundled PostgreSQL and Redis images come from `bitnamilegacy/` with the same tags, because Docker Hub no longer serves them under `bitnami/`. Releases that set their own `postgresql.image` or `redis.image` are not affected.
 - **1.1.2:** `env.FRONTEND_URL` and `env.NEXT_PUBLIC_BACKEND_URL` default to empty, and `env.BACKEND_INTERNAL_URL` to `http://localhost:3000`. Releases that already set these keys keep their values.
 - **1.1.1:** `appVersion` names a published app tag, `v3.6.0`. `image.tag` still defaults to `latest`.
 - **1.1.0:** the chart moved to `oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app`, and the bundled database credentials were renamed to `postqueen*`. From 1.0.x, install under the release name `postqueen`, or set `postgresql.auth.*` and `redis.auth.*` to keep your old credentials.
+
+#### Upgrading to app v3.6.121
+
+`image.tag` defaults to `latest`, which is `v3.6.121` now, so this applies as soon as your pod pulls the image again, whichever chart version you run.
+
+From `v3.6.121`, `db push` no longer accepts changes that Prisma flags as possible data loss: it stops the start instead. A database last updated by an app older than `v3.6.107` (chart 1.1.6 named `v3.6.84`) has two such changes waiting: the top plan's enum value `AGENCY` is renamed to `ULTIMATE` (from `v3.6.89`), and a unique index is added to the credits table (from `v3.6.107`). On `db push`, the pod then restarts in a loop, with this in its log:
+
+```
+Error: Use the --accept-data-loss flag to ignore the data loss warnings like prisma db push --accept-data-loss
+```
+
+Nothing is changed in the database when this happens. The fix is to move the release to migrations, which apply both changes without losing data: the enum value is renamed in place, so a subscription on the top plan keeps it. Follow [Switching to migrations](#switching-to-migrations).
+
+A release that already started an app from `v3.6.107` to `v3.6.120` on `db push` has both changes in place, and `v3.6.121` starts on `db push` as before. Switching to migrations is still recommended. A release with `PRISMA_MIGRATE` already set needs nothing.
+
+#### Switching to migrations
+
+`PRISMA_MIGRATE: "true"` runs `prisma migrate deploy`, which refuses a database that has tables but no migration history (`Error: P3005`). A database built by `db push` therefore needs its history recorded once: mark every migration that ships in the image it was last pushed with as applied. The app's `.env.example` mentions only `prisma migrate resolve --applied 0_init`; on a `db push` database that is not enough, because the next migration then fails with `already exists`.
+
+1. **While the pod still runs the image it was last pushed with**, before upgrading, record the migrations that image contains:
+
+   ```bash
+   kubectl exec deploy/postqueen-postqueen-app -- sh -c '
+     for m in $(ls libraries/nestjs-libraries/src/database/prisma/migrations | grep -v migration_lock); do
+       pnpm exec prisma migrate resolve --applied "$m"
+     done'
+   ```
+
+   Use your release's Deployment name if it is not `postqueen`. This works on app images from `v3.5.0`.
+
+2. Upgrade with migrations on:
+
+   ```bash
+   helm upgrade postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app \
+     --version 1.1.7 -f my-values.yaml --set env.PRISMA_MIGRATE=true
+   ```
+
+   Then keep `PRISMA_MIGRATE: "true"` in `my-values.yaml`. The log shows the newer migrations being applied, then `All migrations have been successfully applied.`
+
+**If the pod is already restarting on `v3.6.121`**, put back the tag it ran before with `--set image.tag=<that tag>`, such as `v3.6.84` if you pinned the chart's `appVersion`. The failed start changed nothing, so the old image starts again. Then follow the two steps above.
+
+If you cannot tell which version it ran, because the release used the default `latest`, set `image.tag=v3.6.120` instead. It is the last image whose `db push` still accepts these changes, so it brings the schema up to `v3.6.120`; then run step 1 in that pod and continue with step 2. It stops with an error, and changes nothing, if a subscription still holds `AGENCY`. In that case you need the version the release ran before.
+
+#### Rolling back
+
+Some app releases change stored data in a way older images cannot read. After your release has run them, do not set `image.tag` below:
+
+- `v3.6.89`: the plan enum rename above. Older images read and write `AGENCY`, which no longer exists.
+- `v3.6.102`: channel tokens are encrypted. Start once on your current image with `env.ENCRYPT_INTEGRATION_TOKENS: "false"`, wait for `Decrypted N stored channel token row(s)` in the log, then change the image.
+- `v3.6.109`: the post workflow `v1.0.12` starts here. Do not go below it while posts are scheduled.
+
+`helm rollback` to an older chart revision also restores that revision's `image.tag` if you set one, so check it first. Take a database backup before every upgrade.
 
 `helm uninstall postqueen` removes the release. The volumes of the bundled PostgreSQL and Redis stay until you delete their PVCs.
 
@@ -158,7 +217,7 @@ Prefer a single host? [postqueen-docker-compose](https://github.com/GkhanKINAY/p
 
 - Channels connect through each network's official OAuth sign-in where the network offers one. On your own cluster, that is the developer app you create for each network.
 - Some networks, such as Bluesky, Lemmy, WordPress and Nostr, need an app password, an account password or a key that you paste in.
-- Your instance stores these credentials in its database so it can post for you, and replaces them when you remove the channel.
+- Your instance stores these credentials in its database so it can post for you, encrypted with `ENCRYPTION_KEY`, and replaces them when you remove the channel.
 - For the hosted service, read the [privacy policy](https://postqueen.ai/privacy-policy), or [delete your account](https://postqueen.ai/delete-my-account).
 
 **Rather not run a cluster?** PostQueen Cloud is the same app, run for you: PostQueen's own network apps (no developer app reviews on your side), the hosted MCP server, AI credits and automatic updates.

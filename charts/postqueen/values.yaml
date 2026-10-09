@@ -121,12 +121,33 @@ env:
   # falls back to localhost:7233, which does not work inside Kubernetes.
   TEMPORAL_ADDRESS: ""
   TEMPORAL_NAMESPACE: "default"
+  # How the app applies its database schema each time it starts.
+  #   ""     (default) `prisma db push`, as in every earlier chart version.
+  #   "true" `prisma migrate deploy`: an ordered, reviewable migration history,
+  #          the same path PostQueen Cloud runs. Recommended for new installs.
+  # An existing database that was built by db push must be baselined once
+  # before you set "true", or the pod stops at start with error P3005. See
+  # "Switching to migrations" in the README.
+  PRISMA_MIGRATE: ""
+  # Channel OAuth tokens are stored encrypted with ENCRYPTION_KEY (app default,
+  # since v3.6.102). Set "false" only for the one start that decrypts them
+  # before you roll the image back below v3.6.102; see the README.
+  ENCRYPT_INTEGRATION_TOKENS: "true"
 
 # Sensitive environment variables (to be stored in Secrets)
 secrets:
   DATABASE_URL: ""
   REDIS_URL: ""
   JWT_SECRET: ""
+  # Encryption at rest for channel tokens and other stored credentials. These
+  # two are left commented on purpose: an empty value here would override one
+  # you set under `env`. Add them to your own values file.
+  #   ENCRYPTION_KEY: a long random value, different from JWT_SECRET. Falls
+  #     back to JWT_SECRET when unset. Losing it disconnects every channel.
+  #   PREVIOUS_ENCRYPTION_KEY: the old key after you change ENCRYPTION_KEY (or
+  #     JWT_SECRET on an install that never set ENCRYPTION_KEY). Keep it set.
+  # ENCRYPTION_KEY: ""
+  # PREVIOUS_ENCRYPTION_KEY: ""
   X_API_KEY: ""
   X_API_SECRET: ""
   LINKEDIN_CLIENT_ID: ""
