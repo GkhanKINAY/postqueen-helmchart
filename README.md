@@ -119,9 +119,9 @@ Every key under `env` and `secrets` becomes an environment variable in the app, 
 | `env.UPLOAD_DIRECTORY` | `/uploads` | Folder for uploads with local storage. Required for `local`. |
 | `env.NEXT_PUBLIC_UPLOAD_STATIC_DIRECTORY` | `uploads` | Path the web app serves uploads from |
 | `env.BACKEND_INTERNAL_URL` | `http://localhost:3000` | How the web app reaches the API inside the same container. Leave it as it is. |
-| `secrets.JWT_SECRET` | `""` | Signs login sessions. Set a long random value. |
 | `env.PRISMA_MIGRATE` | `""`, so `db push` | How the schema is applied at start. `"true"` runs `prisma migrate deploy` and is recommended. A database built by `db push` needs the one-time baseline in [Switching to migrations](#switching-to-migrations) first. |
 | `env.ENCRYPT_INTEGRATION_TOKENS` | `"true"` | Keeps channel OAuth tokens encrypted in the database, the app's default. Set `"false"` only to roll back below `v3.6.102`; see [Rolling back](#rolling-back). |
+| `secrets.JWT_SECRET` | `""` | Signs login sessions. Set a long random value. |
 | `secrets.ENCRYPTION_KEY` | not set | Encrypts channel OAuth tokens and other stored credentials, such as the app passwords and keys typed in when a channel is connected. Falls back to `JWT_SECRET` when unset. Give it its own long random value and keep a copy: losing it disconnects every channel. |
 | `secrets.PREVIOUS_ENCRYPTION_KEY` | not set | The old key after you change `ENCRYPTION_KEY`, or after you change `JWT_SECRET` on an install that never set `ENCRYPTION_KEY`. Leave it set: some tokens are only re-encrypted when they are next written. |
 | `secrets.DATABASE_URL` | `""` | PostgreSQL connection string |
@@ -148,7 +148,7 @@ helm upgrade postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postq
   --version 1.1.7 -f my-values.yaml
 ```
 
-- **1.1.7:** `appVersion` names the current app release, `v3.6.122`. Two values are new, both set to what the app already did: `env.PRISMA_MIGRATE: ""` (keep `db push`) and `env.ENCRYPT_INTEGRATION_TOKENS: "true"`. Releases that set either key keep their value. If a pod is restarting on app `v3.6.121`, see [db push and app v3.6.121](#db-push-and-app-v36121).
+- **1.1.7:** `appVersion` names the current app release, `v3.6.122`. Two values are new, both set to what the app already did: `env.PRISMA_MIGRATE: ""` (keep `db push`) and `env.ENCRYPT_INTEGRATION_TOKENS: "true"`. Releases that set either key keep their value. The pod now restarts whenever `env` or `secrets` change (a `checksum/config` and `checksum/secret` annotation), so upgrading to 1.1.7 restarts it once. On the default `image.tag: latest` that restart starts whatever `latest` the node already holds, so pin `image.tag: v3.6.122` when you upgrade. If a pod is restarting on app `v3.6.121`, see [db push and app v3.6.121](#db-push-and-app-v36121).
 - **1.1.6:** `appVersion` named `v3.6.84`.
 - **1.1.5:** `appVersion` named `v3.6.81`.
 - **1.1.4:** local uploads work out of the box: `STORAGE_PROVIDER`, `UPLOAD_DIRECTORY` and `NEXT_PUBLIC_UPLOAD_STATIC_DIRECTORY` now default to the same values as the Docker Compose stack (`local`, `/uploads`, `uploads`), so the app no longer stops at start when they are left unset.
@@ -190,10 +190,11 @@ Two of the changes waiting for such a database are the top plan's enum value `AG
 
    ```bash
    helm upgrade postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app \
-     --version 1.1.7 -f my-values.yaml --set env.PRISMA_MIGRATE=true
+     --version 1.1.7 -f my-values.yaml \
+     --set env.PRISMA_MIGRATE=true --set image.tag=v3.6.122
    ```
 
-   Then keep `PRISMA_MIGRATE: "true"` in `my-values.yaml`. The log shows the newer migrations being applied, then `All migrations have been successfully applied.`
+   Then keep `PRISMA_MIGRATE: "true"` and `image.tag: v3.6.122` in `my-values.yaml`. Pin the tag: on `latest` with `pullPolicy: IfNotPresent`, the new pod would start the copy of `latest` its node already has, which may be older. Chart versions before 1.1.7 also do not restart the pod when only `env` changes, so a chart upgrade alone on `latest` restarts nothing there. The log shows the newer migrations being applied, then `All migrations have been successfully applied.`
 
 #### Rolling back
 
