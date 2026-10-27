@@ -18,7 +18,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-2563EB?labelColor=15131C" alt="License: Apache-2.0"></a>
-  <a href="charts/postqueen/Chart.yaml"><img src="https://img.shields.io/badge/chart-1.1.8-0EA5E9?labelColor=15131C&logo=helm&logoColor=white" alt="Chart version 1.1.8"></a>
+  <a href="charts/postqueen/Chart.yaml"><img src="https://img.shields.io/badge/chart-1.1.9-0EA5E9?labelColor=15131C&logo=helm&logoColor=white" alt="Chart version 1.1.9"></a>
 </p>
 
 <p align="center">
@@ -98,7 +98,7 @@ Then install it:
 
 ```bash
 helm install postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app \
-  --version 1.1.8 -f my-values.yaml
+  --version 1.1.9 -f my-values.yaml
 ```
 
 `PRISMA_MIGRATE: "true"` is for a new, empty database. On a release that already has data, leave it out until you have followed [Switching to migrations](#switching-to-migrations).
@@ -127,7 +127,7 @@ Every key under `env` and `secrets` becomes an environment variable in the app, 
 | `secrets.DATABASE_URL` | `""` | PostgreSQL connection string |
 | `secrets.REDIS_URL` | `""` | Redis connection string |
 | `image.repository` | `ghcr.io/gkhankinay/postqueen-app` | App image |
-| `image.tag` | `latest` | App version. Pin one of the app's [releases](https://github.com/GkhanKINAY/postqueen-app/releases), such as `v3.6.167`. |
+| `image.tag` | `latest` | App version. Pin one of the app's [releases](https://github.com/GkhanKINAY/postqueen-app/releases), such as `v3.6.168`. |
 | `postgresql.enabled` | `true` | Deploy the bundled PostgreSQL |
 | `postgresql.image.repository` | `bitnamilegacy/postgresql` | Bundled PostgreSQL image, tag `16.4.0-debian-12-r7` |
 | `redis.enabled` | `true` | Deploy the bundled Redis |
@@ -145,10 +145,11 @@ Every key under `env` and `secrets` becomes an environment variable in the app, 
 
 ```bash
 helm upgrade postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app \
-  --version 1.1.8 -f my-values.yaml
+  --version 1.1.9 -f my-values.yaml
 ```
 
-- **1.1.8:** `appVersion` names the current app release, `v3.6.167`. The app adds one database column (`User.timezoneName`, nullable, for the timezone a person picks in Account settings): `db push` installs pick it up at start, and `PRISMA_MIGRATE` installs apply migration `20261027120000_user_timezone_name`. No value changed. PostHog is gone from the app, so `NEXT_PUBLIC_POSTHOG_KEY` and `NEXT_PUBLIC_POSTHOG_HOST` can be dropped from `env` if you set them. Pin `image.tag: v3.6.167` when you upgrade.
+- **1.1.9:** `appVersion` names the current app release, `v3.6.168`, a security release: the post sanitizer's cost guard now reads markup the way the HTML parser does, posts an agent creates over MCP are sanitized like API posts, and deleting an account warns that a shared organization's plan keeps renewing. No database change and no value changed. Pin `image.tag: v3.6.168` when you upgrade.
+- **1.1.8:** `appVersion` named the app release `v3.6.167`. The app adds one database column (`User.timezoneName`, nullable, for the timezone a person picks in Account settings): `db push` installs pick it up at start, and `PRISMA_MIGRATE` installs apply migration `20261027120000_user_timezone_name`. No value changed. PostHog is gone from the app, so `NEXT_PUBLIC_POSTHOG_KEY` and `NEXT_PUBLIC_POSTHOG_HOST` can be dropped from `env` if you set them. Pin `image.tag: v3.6.167` when you upgrade.
 - **1.1.7:** `appVersion` named the app release `v3.6.122`. Two values are new, both set to what the app already did: `env.PRISMA_MIGRATE: ""` (keep `db push`) and `env.ENCRYPT_INTEGRATION_TOKENS: "true"`. Releases that set either key keep their value. The pod now restarts whenever `env` or `secrets` change (a `checksum/config` and `checksum/secret` annotation), so upgrading to 1.1.7 restarts it once. On the default `image.tag: latest` that restart starts whatever `latest` the node already holds, so pin `image.tag: v3.6.122` when you upgrade. If a pod is restarting on app `v3.6.121`, see [db push and app v3.6.121](#db-push-and-app-v36121).
 - **1.1.6:** `appVersion` named `v3.6.84`.
 - **1.1.5:** `appVersion` named `v3.6.81`.
@@ -191,11 +192,11 @@ Two of the changes waiting for such a database are the top plan's enum value `AG
 
    ```bash
    helm upgrade postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app \
-     --version 1.1.8 -f my-values.yaml \
-     --set env.PRISMA_MIGRATE=true --set image.tag=v3.6.167
+     --version 1.1.9 -f my-values.yaml \
+     --set env.PRISMA_MIGRATE=true --set image.tag=v3.6.168
    ```
 
-   Then keep `PRISMA_MIGRATE: "true"` and `image.tag: v3.6.167` in `my-values.yaml`. Pin the tag: on `latest` with `pullPolicy: IfNotPresent`, the new pod would start the copy of `latest` its node already has, which may be older. Chart versions before 1.1.7 also do not restart the pod when only `env` changes, so a chart upgrade alone on `latest` restarts nothing there. The log shows the newer migrations being applied, then `All migrations have been successfully applied.`
+   Then keep `PRISMA_MIGRATE: "true"` and `image.tag: v3.6.168` in `my-values.yaml`. Pin the tag: on `latest` with `pullPolicy: IfNotPresent`, the new pod would start the copy of `latest` its node already has, which may be older. Chart versions before 1.1.7 also do not restart the pod when only `env` changes, so a chart upgrade alone on `latest` restarts nothing there. The log shows the newer migrations being applied, then `All migrations have been successfully applied.`
 
 #### Rolling back
 
