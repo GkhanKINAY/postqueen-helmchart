@@ -18,7 +18,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-2563EB?labelColor=15131C" alt="License: Apache-2.0"></a>
-  <a href="charts/postqueen/Chart.yaml"><img src="https://img.shields.io/badge/chart-1.1.13-0EA5E9?labelColor=15131C&logo=helm&logoColor=white" alt="Chart version 1.1.13"></a>
+  <a href="charts/postqueen/Chart.yaml"><img src="https://img.shields.io/badge/chart-1.1.14-0EA5E9?labelColor=15131C&logo=helm&logoColor=white" alt="Chart version 1.1.14"></a>
 </p>
 
 <p align="center">
@@ -98,7 +98,7 @@ Then install it:
 
 ```bash
 helm install postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app \
-  --version 1.1.13 -f my-values.yaml
+  --version 1.1.14 -f my-values.yaml
 ```
 
 `PRISMA_MIGRATE: "true"` is for a new, empty database. On a release that already has data, leave it out until you have followed [Switching to migrations](#switching-to-migrations).
@@ -127,7 +127,7 @@ Every key under `env` and `secrets` becomes an environment variable in the app, 
 | `secrets.DATABASE_URL` | `""` | PostgreSQL connection string |
 | `secrets.REDIS_URL` | `""` | Redis connection string |
 | `image.repository` | `ghcr.io/gkhankinay/postqueen-app` | App image |
-| `image.tag` | `latest` | App version. Pin one of the app's [release tags](https://github.com/GkhanKINAY/postqueen-app/tags), such as `v3.6.172`. |
+| `image.tag` | `latest` | App version. Pin one of the app's [release tags](https://github.com/GkhanKINAY/postqueen-app/tags), such as `v3.6.177`. |
 | `postgresql.enabled` | `true` | Deploy the bundled PostgreSQL |
 | `postgresql.image.repository` | `bitnamilegacy/postgresql` | Bundled PostgreSQL image, tag `16.4.0-debian-12-r7` |
 | `redis.enabled` | `true` | Deploy the bundled Redis |
@@ -145,10 +145,11 @@ Every key under `env` and `secrets` becomes an environment variable in the app, 
 
 ```bash
 helm upgrade postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app \
-  --version 1.1.13 -f my-values.yaml
+  --version 1.1.14 -f my-values.yaml
 ```
 
-- **1.1.13:** `appVersion` names the current app release, `v3.6.172`. Stripe.js now loads only on signed-in pages and when a payment runs, so the login page and public post previews set no Stripe cookies, and the public post preview shows the platform icon when a channel has no photo. No database change and no value changed. Pin `image.tag: v3.6.172` when you upgrade.
+- **1.1.14:** `appVersion` names the current app release, `v3.6.177`, which also carries `v3.6.173` to `v3.6.176`. The app adds seven database indexes for the calendar, the media library and notifications, and drops eight that the new ones replace or no query uses: `db push` installs pick this up at start, and `PRISMA_MIGRATE` installs apply migration `20261125150000_post_media_notification_indexes`, which runs as one transaction. On very large `Post` or `Media` tables, create the new indexes `CONCURRENTLY` under the names in that file before you upgrade, and the migration then skips them. The MCP server has 28 tools with an API key and 27 with sign-in, among them a link to connect a new channel, a channel's own analytics and replacing the media of a post that has not gone out. New optional settings go under `env` or `secrets` like any other: `EMAIL_PROVIDER: "ses"` with `SES_REGION`, `SES_ACCESS_KEY` and `SES_SECRET_ACCESS_KEY` for Amazon SES, and `SLACK_ALERT_WEBHOOK_URL`. No chart value changed. Pin `image.tag: v3.6.177` when you upgrade.
+- **1.1.13:** `appVersion` named the app release `v3.6.172`. Stripe.js now loads only on signed-in pages and when a payment runs, so the login page and public post previews set no Stripe cookies, and the public post preview shows the platform icon when a channel has no photo. No database change and no value changed. Pin `image.tag: v3.6.172` when you upgrade.
 - **1.1.12:** `appVersion` named the app release `v3.6.171`. A self-hosted database that still has channels of the removed network now has them removed at start, with their posts, the way removing a channel in the app does: they no longer come back on with a plan upgrade, wait on a queue nothing serves, or send reconnect emails. This cannot be undone by rolling back. No database change and no value changed. Pin `image.tag: v3.6.171` when you upgrade.
 - **1.1.11:** `appVersion` named the app release `v3.6.170`. The app lists 30 networks: one that stops taking API access requests and closes its public API was removed, and `values.yaml` drops its two empty `secrets` keys. A release that sets them still passes them to the app, which ignores them. A self-hosted database that had channels of that network keeps them switched off and out of the channel list. No database change. Pin `image.tag: v3.6.170` when you upgrade.
 - **1.1.10:** `appVersion` named the app release `v3.6.169`, a security release: the dashboard checks a post as it will be saved, so a very long post of short tags no longer holds the API, and a thread finisher is cleaned like every other part. No database change and no value changed. Pin `image.tag: v3.6.169` when you upgrade.
@@ -196,11 +197,11 @@ Two of the changes waiting for such a database are the top plan's enum value `AG
 
    ```bash
    helm upgrade postqueen oci://ghcr.io/gkhankinay/postqueen-helmchart/charts/postqueen-app \
-     --version 1.1.13 -f my-values.yaml \
-     --set env.PRISMA_MIGRATE=true --set image.tag=v3.6.172
+     --version 1.1.14 -f my-values.yaml \
+     --set env.PRISMA_MIGRATE=true --set image.tag=v3.6.177
    ```
 
-   Then keep `PRISMA_MIGRATE: "true"` and `image.tag: v3.6.172` in `my-values.yaml`. Pin the tag: on `latest` with `pullPolicy: IfNotPresent`, the new pod would start the copy of `latest` its node already has, which may be older. Chart versions before 1.1.7 also do not restart the pod when only `env` changes, so a chart upgrade alone on `latest` restarts nothing there. The log shows the newer migrations being applied, then `All migrations have been successfully applied.`
+   Then keep `PRISMA_MIGRATE: "true"` and `image.tag: v3.6.177` in `my-values.yaml`. Pin the tag: on `latest` with `pullPolicy: IfNotPresent`, the new pod would start the copy of `latest` its node already has, which may be older. Chart versions before 1.1.7 also do not restart the pod when only `env` changes, so a chart upgrade alone on `latest` restarts nothing there. The log shows the newer migrations being applied, then `All migrations have been successfully applied.`
 
 #### Rolling back
 
